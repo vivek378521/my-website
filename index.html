@@ -4,59 +4,197 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
+    <title>Vivek Khatri | Backend Architect</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Eczar:wght@600;800&family=JetBrains+Mono:wght@500&family=Lora:ital,wght@0,500;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <div class="container">
-        <main>
-            <section id="about">
-                <div class="content">
-                    <h1>Vivek Khatri</h1>
-                    <img class="profile-pic" src="my-face.jpeg" alt="My face">
-                    <div style="clear:both;"></div>
-                    <h3>Greetings, fellow humans and other non-human entities (Web crawlers, I see you.)!</h3>
 
-                    <p>My name is Vivek Khatri. I am a backend engineer who like to work on early stage products. I like
-                        the fast feedback loop.</p>
-                    <p>I have worked at one mid size b2b saas place, quick commerce startup and an early social consumer
-                        app. I like startups. I currently work at one. My aim is to become the go-to backend guy for
-                        early stage products. I have used multiple tech stacks - Java + MySql, Node + Mongo, Python +
-                        Postgres, Python + Mongo, Sprinkle some golang too.</p>
-                    <p>I recently have also started contributing to the Frontend, although I am no master at it, I get
-                        things done with help of my colleagues. I love writing code and I am grateful that I do it for a
-                        living. I cannot think of anything else that I'd rather be doing.</p>
-                    <p>I love to read sci-fi and fantasy books. I draw comics some times, I write fictional stories, I
-                        also crack some jokes here and there. </p>
+    <!-- === 1. THE CHARIOT (RATH) === -->
+    <div class="chariot-track">
+        <div class="chariot-group">
+            <div class="horses">
+                <i class="fas fa-horse"></i>
+                <i class="fas fa-horse" style="margin-left: -12px; margin-top: 4px;"></i>
+            </div>
+            <div class="chariot-body">
+                <div class="flag"></div>
+                <div class="chariot-cover"></div>
+                <div class="wheel"><i class="fas fa-dharmachakra"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- === 2. BACKGROUND: THE GRAND TIJORI === -->
+    <div class="tijori-container">
+        <div class="tijori-rays"></div>
+        <div class="ring-wrapper ring-outer" id="ring-1"></div>
+        <div class="ring-wrapper ring-middle" id="ring-2"></div>
+        <div class="ring-wrapper ring-inner" id="ring-3"></div>
+
+        <!-- Central Core: THE ROYAL SEAL (SHREE) -->
+        <div class="core-mandala">
+            <span class="indic-symbol">श्री</span>
+        </div>
+    </div>
+
+    <!-- === 3. DYNAMIC SURYA === -->
+    <div id="scroll-surya" class="surya-container">
+        <div class="surya-rays"></div>
+        <div class="surya-core"><i class="fas fa-sun"></i></div>
+    </div>
+
+    <div class="layout-container">
+
+        <!-- === 4. LEFT: SIDEBAR === -->
+        <aside class="pillar">
+            <div class="profile-section">
+                <div class="portrait-frame">
+                    <img src="my-face.jpeg" alt="Vivek" class="portrait">
+                </div>
+                <h1 class="royal-name">Vivek Khatri</h1>
+                <p class="royal-title">System Architect</p>
+                <div class="divider-ornament"><i class="fas fa-vihara"></i></div>
+            </div>
+
+            <nav class="scroll-nav">
+                <a href="#about" class="nav-link active" id="nav-about">
+                    <span class="icon">➜</span> <span class="text">The Blueprint</span>
+                </a>
+                <a href="#projects" class="nav-link" id="nav-projects">
+                    <span class="icon">➜</span> <span class="text">The Arsenal</span>
+                </a>
+                <a href="#logs" class="nav-link" id="nav-logs">
+                    <span class="icon">➜</span> <span class="text">The Chronicles</span>
+                </a>
+            </nav>
+
+            <div class="social-seal">
+                <a href="https://github.com/vivek378521" target="_blank" title="GitHub"><i
+                        class="fab fa-github-alt"></i></a>
+                <a href="https://linkedin.com/in/vivekkhatri007" target="_blank" title="LinkedIn"><i
+                        class="fab fa-linkedin-in"></i></a>
+                <a href="resume.pdf" target="_blank" title="View Resume"><i class="fas fa-scroll"></i></a>
+            </div>
+
+            <a href="resume.pdf" target="_blank" class="royal-btn">
+                View Royal Decree
+            </a>
+        </aside>
+
+        <!-- === 5. RIGHT: CONTENT === -->
+        <main class="content-scroll" id="scroll-container">
+
+            <section id="about" class="manuscript-section">
+                <h2 class="heading-ornate">Foundation.py</h2>
+                <div class="parchment-card">
+                    <div class="corner-decor tl"></div>
+                    <div class="corner-decor br"></div>
+                    <div class="code-ink">
+                        <div class="line"><span class="kwd">class</span> <span class="cls">BackendEngineer</span>:</div>
+                        <div class="line indent"><span class="cmnt"># "योगः कर्मसु कौशलम्" - Excellence in Action</span>
+                        </div>
+                        <div class="line indent"><span class="kwd">def</span> <span class="func">__init__</span>(<span
+                                class="self">self</span>):</div>
+                        <div class="line indent-2"><span class="self">self</span>.stack = [<span
+                                class="str">"Python"</span>, <span class="str">"Java"</span>, <span
+                                class="str">"Node"</span>]</div>
+                        <div class="line indent-2"><span class="self">self</span>.db = [<span
+                                class="str">"Postgres"</span>, <span class="str">"MySQL"</span>, <span
+                                class="str">"Redis"</span>]</div>
+                        <div class="line indent-2"><span class="self">self</span>.ops = [<span
+                                class="str">"Docker"</span>, <span class="str">"AWS"</span>, <span
+                                class="str">"CI/CD"</span>]</div>
+                        <div class="line">&nbsp;</div>
+                        <div class="line indent"><span class="kwd">def</span> <span class="func">focus</span>(<span
+                                class="self">self</span>):</div>
+                        <div class="line indent-2"><span class="kwd">return</span> {</div>
+                        <div class="line indent-3"><span class="key">"Arch"</span>: <span class="str">"Scalable Schema
+                                Design"</span>,</div>
+                        <div class="line indent-3"><span class="key">"Perf"</span>: <span class="str">"High Throughput
+                                APIs"</span></div>
+                        <div class="line indent-2">}</div>
+                    </div>
+                </div>
+                <p class="ink-text">
+                    I engineer digital stability. From designing complex database schemas to optimizing query
+                    performance, I ensure the system stands resilient against the scale of the modern web.
+                </p>
+            </section>
+
+            <section id="projects" class="manuscript-section">
+                <h2 class="heading-ornate">The Arsenal</h2>
+                <div class="grid-arsenal">
+                    <a href="https://pypi.org/project/huff-puff/" target="_blank" class="weapon-card">
+                        <div class="card-frame"></div>
+                        <div class="card-symbol"><i class="fab fa-python"></i></div>
+                        <h3>Huff-Puff</h3>
+                        <p>High-utility Python library.</p>
+                        <span class="stamp">Open Source</span>
+                    </a>
+                    <a href="https://imagify.peculiarvivek.com" target="_blank" class="weapon-card">
+                        <div class="card-frame"></div>
+                        <div class="card-symbol"><i class="fas fa-paint-brush"></i></div>
+                        <h3>Imagify</h3>
+                        <p>Text-to-Image Engine.</p>
+                        <span class="stamp">Social Media Tooling</span>
+                    </a>
+                    <a href="https://gsheet-exporter.peculiarvivek.com/" target="_blank" class="weapon-card">
+                        <div class="card-frame"></div>
+                        <div class="card-symbol"><i class="fas fa-table"></i></div>
+                        <h3>G-Exporter</h3>
+                        <p>Google Sheets Data Pipeline.</p>
+                        <span class="stamp">Tooling</span>
+                    </a>
+                    <a href="https://www.humansoftpot.com/" target="_blank" class="weapon-card">
+                        <div class="card-frame"></div>
+                        <div class="card-symbol"><i class="fas fa-users"></i></div>
+                        <h3>Humans of Tpot</h3>
+                        <p>Community Storytelling Platform.</p>
+                        <span class="stamp">Full Stack</span>
+                    </a>
                 </div>
             </section>
 
-            <section class="content">
-                <h2>Some links you can check out</h2>
-                <ul>
-                    <li><a href="https://tech.peculiarvivek.com">My tech blog, I jot down tech things here</a></li>
-                    <li><a href="https://github.com/vivek378521">My github</a></li>
-                    <li><a href="https://linkedin.com/in/vivekkhatri007">My LinkedIn (I have 5,000 followers)</a></li>
-                    <li><a href="https://drive.google.com/file/d/11UC3iCdHRdpu8MWE3Mm8K-qS6GmQmM5O/view">My Nice, Full
-                            of nice experiences, Resume</a></li>
-                </ul>
+            <section id="logs" class="manuscript-section">
+                <h2 class="heading-ornate">The Chronicles</h2>
+                <div class="log-entry">
+                    <div class="wax-seal">
+                        <i class="fas fa-feather-alt"></i>
+                    </div>
+                    <div class="log-content">
+                        <h3>The Tech Chronicles</h3>
+                        <p>Deep dives into backend design patterns, database locking strategies, and the philosophy of
+                            clean architecture.</p>
+                        <a href="https://tech.peculiarvivek.com" target="_blank" class="read-link">Unroll Scroll
+                            &rarr;</a>
+                    </div>
+                </div>
+                <div class="log-entry" style="margin-top: 20px; opacity: 0.7;">
+                    <div class="wax-seal" style="background: #E0E0E0;">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="log-content">
+                        <h3>What I did in November</h3>
+                        <p>Reflecting on new tools learned, code shipped, and coffee consumed.</p>
+                        <span class="read-link"
+                            style="color: gray; border: none; border-bottom: 1px dashed gray;">Drafting...</span>
+                    </div>
+                </div>
             </section>
-            <section class="content">
-                <h2>Live Project Links</h2>
-                <ul>
-                    <li><a href="https://imagify.peculiarvivek.com">Convert your text into image</a></li>
-                    <li><a href="https://gsheet-exporter.peculiarvivek.com/">Gsheet Exporter</a></li>
-                    <li><a href="https://whereyouat.peculiarvivek.com/">Where You At</a></li>
-                    <li><a href="https://www.humansoftpot.com/">Humans of Tpot</a></li>
-                    <li><a href="https://pypi.org/project/huff-puff/">Published Python Library</a></li>
-                </ul>
-            </section>
+
+            <footer class="royal-footer">
+                Designed in India // Vivek Khatri // Built by Gemini3
+            </footer>
         </main>
     </div>
 
-    <footer>
-        <p>&copy; 2024 Vivek Khatri</p>
-    </footer>
+    <script src="script.js"></script>
 </body>
 
 </html>
