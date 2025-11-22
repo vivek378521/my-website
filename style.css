@@ -24,6 +24,7 @@ body {
     font-family: var(--f-text);
     height: 100vh;
     overflow: hidden;
+    /* Default for Desktop */
 }
 
 /* === 1. CHARIOT === */
@@ -33,8 +34,9 @@ body {
     left: 0;
     width: 100%;
     height: 65px;
-    background: linear-gradient(to bottom, #F2EBD4 60%, transparent);
-    z-index: 50;
+    background: linear-gradient(to bottom, #F2EBD4 80%, transparent);
+    z-index: 100;
+    /* Highest Z-Index to stay on top */
     border-bottom: 1px dashed var(--gold);
     overflow: hidden;
 }
@@ -217,32 +219,23 @@ body {
     text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.5);
 }
 
-/* --- CORE: TORII GATE STYLE --- */
 .core-mandala {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    /* Pulse animation */
     animation: pulse-core 6s infinite alternate;
     z-index: 10;
 }
 
 .indic-symbol {
     font-family: 'Eczar', serif;
-    /* The Royal Indic Font */
     font-size: 80px;
     font-weight: 800;
     color: var(--maroon);
     line-height: 1;
     display: block;
-
-    /* The "Golden Glow" Effect */
-    text-shadow:
-        0 0 10px var(--saffron),
-        0 0 30px var(--gold),
-        2px 2px 0px rgba(42, 27, 18, 0.2);
-    /* Slight depth */
+    text-shadow: 0 0 10px var(--saffron), 0 0 30px var(--gold), 2px 2px 0px rgba(42, 27, 18, 0.2);
 }
 
 @keyframes spin-cw {
@@ -297,7 +290,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 5;
+    z-index: 50;
     pointer-events: none;
     opacity: 0.2;
     transition: opacity 0.5s, transform 0.1s;
@@ -447,7 +440,6 @@ body {
     box-shadow: 0 4px 10px rgba(42, 27, 18, 0.08);
 }
 
-/* Socials & Button */
 .social-seal {
     display: flex;
     gap: 25px;
@@ -487,7 +479,6 @@ body {
     box-shadow: 0 5px 15px rgba(128, 0, 0, 0.2);
 }
 
-/* Cards */
 .heading-ornate {
     font-family: var(--f-royal);
     font-size: 2.8rem;
@@ -713,32 +704,116 @@ body {
     opacity: 0.6;
 }
 
+/* === MOBILE OPTIMIZATIONS === */
 @media (max-width: 768px) {
-    .layout-container {
-        flex-direction: column;
-    }
 
-    .pillar {
-        width: 100%;
-        border-right: none;
-        border-bottom: 4px double var(--gold);
-        padding: 40px 20px;
+    /* 1. Allow page scroll */
+    body {
+        overflow-y: auto;
         height: auto;
     }
 
-    .tijori-container {
-        width: 100vw;
-        height: 100vw;
-        opacity: 0.05;
-        top: 30%;
-        left: 50%;
+    /* 2. Layout Stack */
+    .layout-container {
+        flex-direction: column;
+        height: auto;
+        width: 100%;
+        overflow-x: hidden;
+        /* Prevent horizontal scroll */
     }
 
+    /* 3. Pillar (Sidebar) Adjustments */
+    .pillar {
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 2px solid var(--gold);
+        padding: 90px 20px 40px 20px;
+        position: relative;
+    }
+
+    /* 4. Content Area Adjustments */
     .content-scroll {
-        padding: 80px 20px;
+        width: 100%;
+        height: auto;
+        padding: 40px 20px 100px 20px;
+        overflow: visible;
     }
 
+    /* 5. FIX: Force Visibility & Remove Animation on Mobile */
+    /* This ensures content is never hidden, even if JS fails */
+    .manuscript-section {
+        opacity: 1 !important;
+        transform: none !important;
+        margin-bottom: 80px;
+        scroll-margin-top: 80px;
+    }
+
+    /* 6. FIX: Force Arsenal Grid to Stack */
+    .grid-arsenal {
+        grid-template-columns: 1fr;
+        /* Single column */
+        gap: 20px;
+    }
+
+    /* 7. Adjust Visuals */
     .chariot-track {
         height: 50px;
+    }
+
+    .chariot-group {
+        transform: scale(0.8);
+        top: 10px;
+        right: -250px;
+    }
+
+    .tijori-container {
+        width: 85vw;
+        height: 85vw;
+        top: 40%;
+        left: 50%;
+        opacity: 0.08;
+    }
+
+    .surya-container {
+        bottom: 20px;
+        right: 20px;
+        transform: scale(0.8);
+    }
+
+    .surya-container.active {
+        transform: scale(1);
+    }
+
+    /* Typography */
+    .heading-ornate {
+        font-size: 2rem;
+    }
+
+    .royal-name {
+        font-size: 1.8rem;
+    }
+
+    .code-ink {
+        font-size: 0.8rem;
+    }
+
+    .parchment-card {
+        padding: 25px 20px;
+    }
+
+    /* Stack Log Entries */
+    .log-entry {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .log-content {
+        width: 100%;
+    }
+
+    .wax-seal {
+        margin-bottom: 15px;
     }
 }
