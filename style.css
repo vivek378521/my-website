@@ -24,7 +24,8 @@ body {
     font-family: var(--f-text);
     height: 100vh;
     overflow: hidden;
-    /* Default for Desktop */
+    /* NEW: Paper Texture Overlay using CSS gradient noise */
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
 }
 
 /* === 1. CHARIOT === */
@@ -36,7 +37,6 @@ body {
     height: 65px;
     background: linear-gradient(to bottom, #F2EBD4 80%, transparent);
     z-index: 100;
-    /* Highest Z-Index to stay on top */
     border-bottom: 1px dashed var(--gold);
     overflow: hidden;
 }
@@ -143,7 +143,7 @@ body {
     }
 }
 
-/* === 2. TIJORI (Background) === */
+/* === 2. TIJORI === */
 .tijori-container {
     position: fixed;
     top: 50%;
@@ -370,6 +370,7 @@ body {
     transform: translateY(0);
 }
 
+/* Sidebar */
 .portrait-frame {
     width: 140px;
     height: 140px;
@@ -479,6 +480,7 @@ body {
     box-shadow: 0 5px 15px rgba(128, 0, 0, 0.2);
 }
 
+/* Content Cards */
 .heading-ornate {
     font-family: var(--f-royal);
     font-size: 2.8rem;
@@ -530,6 +532,7 @@ body {
     border-top: none;
 }
 
+/* Improved Code Styling */
 .code-ink {
     font-family: var(--f-code);
     font-size: 0.95rem;
@@ -564,11 +567,12 @@ body {
 }
 
 .cmnt {
-    color: var(--ink-secondary);
+    color: #7f5f53;
     font-style: italic;
-    opacity: 0.8;
+    opacity: 0.9;
 }
 
+/* Made comments more readable */
 .key {
     color: var(--ink-primary);
     font-weight: bold;
@@ -706,23 +710,18 @@ body {
 
 /* === MOBILE OPTIMIZATIONS === */
 @media (max-width: 768px) {
-
-    /* 1. Allow page scroll */
     body {
         overflow-y: auto;
         height: auto;
     }
 
-    /* 2. Layout Stack */
     .layout-container {
         flex-direction: column;
         height: auto;
         width: 100%;
         overflow-x: hidden;
-        /* Prevent horizontal scroll */
     }
 
-    /* 3. Pillar (Sidebar) Adjustments */
     .pillar {
         width: 100%;
         height: auto;
@@ -732,7 +731,6 @@ body {
         position: relative;
     }
 
-    /* 4. Content Area Adjustments */
     .content-scroll {
         width: 100%;
         height: auto;
@@ -740,8 +738,6 @@ body {
         overflow: visible;
     }
 
-    /* 5. FIX: Force Visibility & Remove Animation on Mobile */
-    /* This ensures content is never hidden, even if JS fails */
     .manuscript-section {
         opacity: 1 !important;
         transform: none !important;
@@ -749,14 +745,11 @@ body {
         scroll-margin-top: 80px;
     }
 
-    /* 6. FIX: Force Arsenal Grid to Stack */
     .grid-arsenal {
         grid-template-columns: 1fr;
-        /* Single column */
         gap: 20px;
     }
 
-    /* 7. Adjust Visuals */
     .chariot-track {
         height: 50px;
     }
@@ -785,7 +778,6 @@ body {
         transform: scale(1);
     }
 
-    /* Typography */
     .heading-ornate {
         font-size: 2rem;
     }
@@ -802,7 +794,6 @@ body {
         padding: 25px 20px;
     }
 
-    /* Stack Log Entries */
     .log-entry {
         flex-direction: column;
         align-items: center;
