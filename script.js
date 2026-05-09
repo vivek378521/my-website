@@ -1,73 +1,86 @@
-function createRingText(elementId, textArray) {
-    const ring = document.getElementById(elementId);
-    if (!ring) return;
-    const count = textArray.length;
-    const angleStep = 360 / count;
-    textArray.forEach((char, index) => {
-        const span = document.createElement('span');
-        span.innerHTML = char;
-        span.className = 'ring-char';
-        span.style.transform = `rotate(${index * angleStep}deg)`;
-        ring.appendChild(span);
-    });
-}
-createRingText('ring-1', "☸ ⚜ ☸ ⚜ ☸ ⚜ ☸ ⚜ ☸ ⚜ ☸ ⚜ ☸ ⚜ ☸ ⚜".split(' '));
-createRingText('ring-2', "० १ २ ३ ४ ५ ६ ७ ८ ९ ० १ २ ३ ४ ५".split(' '));
-createRingText('ring-3', "▲ ▼ ▲ ▼ ▲ ▼ ▲ ▼ ▲ ▼ ▲ ▼".split(' '));
+// === INTERACTIONS ===
 
-const navLinks = document.querySelectorAll('.nav-link');
-const sections = document.querySelectorAll('.manuscript-section');
-const scrollContainer = document.getElementById('scroll-container');
-const isMobile = window.innerWidth <= 768;
-const scrollRoot = isMobile ? null : scrollContainer;
-
-const observerOptions = {
-    root: scrollRoot,
-    rootMargin: isMobile ? "-10% 0px -70% 0px" : "-20% 0px -60% 0px",
-    threshold: 0
-};
-
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            navLinks.forEach(link => link.classList.remove('active'));
-            const id = entry.target.getAttribute('id');
-            const activeLink = document.querySelector(`#nav-${id}`);
-            if (activeLink) activeLink.classList.add('active');
-            entry.target.classList.add('visible');
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth' });
         }
     });
-}, observerOptions);
-sections.forEach(section => observer.observe(section));
-
-const suryaContainer = document.getElementById('scroll-surya');
-const suryaRays = document.querySelector('.surya-rays');
-let isScrolling;
-
-function handleScroll(scrollTop) {
-    const rotation = scrollTop / 5;
-    suryaRays.style.transform = `rotate(${rotation}deg)`;
-    suryaContainer.classList.add('active');
-    window.clearTimeout(isScrolling);
-    isScrolling = setTimeout(() => {
-        suryaContainer.classList.remove('active');
-    }, 150);
-}
-
-if (isMobile) {
-    window.addEventListener('scroll', () => handleScroll(window.scrollY));
-} else {
-    scrollContainer.addEventListener('scroll', () => handleScroll(scrollContainer.scrollTop));
-}
-
-window.addEventListener('DOMContentLoaded', () => {
-    if (window.location.hash) {
-        const targetId = window.location.hash.substring(1);
-        const targetSection = document.getElementById(targetId);
-        if (targetSection) {
-            setTimeout(() => {
-                targetSection.scrollIntoView({ behavior: 'smooth' });
-            }, 100);
-        }
-    }
 });
+
+// Active nav link on scroll
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-link');
+
+window.addEventListener('scroll', () => {
+    let current = '';
+
+    sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        if (scrollY >= sectionTop - 200) {
+            current = section.getAttribute('id');
+        }
+    });
+
+    navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + current) {
+            link.classList.add('active');
+        }
+    });
+});
+
+// Reveal content as it enters the viewport
+const revealItems = document.querySelectorAll('.reveal');
+
+if ('IntersectionObserver' in window) {
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) {
+                return;
+            }
+
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+        });
+    }, {
+        threshold: 0.18
+    });
+
+    revealItems.forEach(item => revealObserver.observe(item));
+} else {
+    revealItems.forEach(item => item.classList.add('visible'));
+}
+
+// View switcher: loud portal by default, plain version on demand.
+const viewToggleButtons = document.querySelectorAll('[data-view-target]');
+const portalView = document.querySelector('#portal-view');
+const simpleView = document.querySelector('#simple-view');
+
+function setView(viewName) {
+    const nextIsSimple = viewName === 'simple';
+
+    simpleView.classList.toggle('active', nextIsSimple);
+    portalView.classList.toggle('active', !nextIsSimple);
+    document.body.classList.toggle('simple-mode', nextIsSimple);
+
+    if (window.location.hash !== '#' + viewName) {
+        history.replaceState(null, '', '#' + viewName);
+    }
+}
+
+viewToggleButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        setView(button.dataset.viewTarget);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+});
+
+setView(window.location.hash === '#simple' ? 'simple' : 'portal');
+
+// Console greeting
+console.log('%cVivek Khatri / backend + data systems', 'font-size: 16px; color: #00ff88; font-weight: bold;');
+console.log('%cThanks for checking out the source.', 'font-size: 12px; color: #a8a8a8;');
