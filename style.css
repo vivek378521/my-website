@@ -107,7 +107,7 @@ body.simple-mode .page {
 
 .masthead {
     display: grid;
-    grid-template-columns: 92px 1fr 116px;
+    grid-template-columns: 92px 1fr 116px 132px;
     gap: 18px;
     align-items: center;
     padding: 18px;
@@ -160,6 +160,33 @@ body.simple-mode .page {
     object-fit: cover;
     border: 4px solid var(--blue-dark);
     background: #fff;
+}
+
+.modi-sticker {
+    justify-self: end;
+    width: 124px;
+    padding: 5px;
+    color: #000;
+    background:
+        repeating-linear-gradient(0deg, #fff200 0 6px, #ff00ff 6px 12px);
+    border: 3px ridge #000;
+    box-shadow: 4px 4px 0 #00e5ff, -3px -3px 0 #ff0000;
+    text-align: center;
+    transform: rotate(3deg);
+}
+
+.modi-sticker__photo {
+    display: block;
+    width: 104px;
+    height: 104px;
+    margin: 0 auto;
+    object-fit: cover;
+    object-position: center top;
+    background: #fff;
+    border: 3px solid #000;
+    filter: saturate(1.45) contrast(1.25);
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
 }
 
 .main-nav {
@@ -733,6 +760,17 @@ td code {
         grid-column: 1 / -1;
         width: 100%;
         height: 220px;
+    }
+
+    .modi-sticker {
+        grid-column: 1 / -1;
+        justify-self: end;
+        width: 146px;
+    }
+
+    .modi-sticker__photo {
+        width: 126px;
+        height: 126px;
     }
 
     .blink-name {
