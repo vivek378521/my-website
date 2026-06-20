@@ -11,44 +11,17 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Active nav link on scroll
-const sections = document.querySelectorAll('section[id]');
-const navLinks = document.querySelectorAll('.nav-link');
-
-window.addEventListener('scroll', () => {
-    let current = '';
-
-    sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        if (scrollY >= sectionTop - 200) {
-            current = section.getAttribute('id');
-        }
-    });
-
-    navLinks.forEach(link => {
-        link.classList.remove('active');
-        if (link.getAttribute('href') === '#' + current) {
-            link.classList.add('active');
-        }
-    });
-});
-
 // Reveal content as it enters the viewport
 const revealItems = document.querySelectorAll('.reveal');
 
 if ('IntersectionObserver' in window) {
     const revealObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
-            if (!entry.isIntersecting) {
-                return;
-            }
-
+            if (!entry.isIntersecting) return;
             entry.target.classList.add('visible');
             observer.unobserve(entry.target);
         });
-    }, {
-        threshold: 0.18
-    });
+    }, { threshold: 0.18 });
 
     revealItems.forEach(item => revealObserver.observe(item));
 } else {
@@ -82,5 +55,5 @@ viewToggleButtons.forEach(button => {
 setView(window.location.hash === '#simple' ? 'simple' : 'portal');
 
 // Console greeting
-console.log('%cVivek Khatri / backend + data systems', 'font-size: 16px; color: #00ff88; font-weight: bold;');
-console.log('%cThanks for checking out the source.', 'font-size: 12px; color: #a8a8a8;');
+console.log('%cVivek Khatri / backend + data systems', 'font-size: 16px; color: #0044cc; font-weight: bold;');
+console.log('%cThanks for checking out the source.', 'font-size: 12px; color: #888;');
