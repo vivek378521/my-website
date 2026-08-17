@@ -452,6 +452,72 @@ body.simple-mode .footer {
     margin-top: 12px;
 }
 
+/* ─── Testimonials ─── */
+
+.testimonials {
+    margin-bottom: 16px;
+    padding: 16px;
+    background: var(--paper);
+    border: 2px solid var(--border);
+    box-shadow: var(--shadow);
+}
+
+.testimonial-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.testimonial-card {
+    position: relative;
+    padding: 24px 24px 20px;
+    background: #f8fafc;
+    border-left: 4px solid var(--blue);
+}
+
+.testimonial-card::before {
+    content: "“";
+    position: absolute;
+    top: -6px;
+    left: 12px;
+    color: var(--blue);
+    font-family: Georgia, serif;
+    font-size: 56px;
+    line-height: 1;
+    opacity: 0.2;
+    pointer-events: none;
+}
+
+.testimonial-quote p {
+    color: #1f2937;
+    font-size: 14px;
+    line-height: 1.65;
+}
+
+.testimonial-quote p + p {
+    margin-top: 12px;
+}
+
+.testimonial-attribution {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid #d1d5db;
+}
+
+.testimonial-author {
+    color: var(--blue-dark);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.testimonial-org {
+    color: var(--muted);
+    font-size: 12px;
+}
+
 /* ─── Capabilities ─── */
 
 .capability-board,
@@ -742,6 +808,10 @@ td code {
     }
 
     .position-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .testimonial-grid {
         grid-template-columns: 1fr;
     }
 
