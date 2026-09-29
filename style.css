@@ -261,10 +261,6 @@ body.simple-mode .footer {
     letter-spacing: 0.05em;
 }
 
-.important h2 {
-    background: var(--red);
-}
-
 .box p {
     line-height: 1.55;
 }
@@ -436,20 +432,18 @@ body.simple-mode .footer {
     color: var(--red);
 }
 
-.position-notes {
-    padding: 14px;
+.position-list {
+    margin: 0;
+    padding: 14px 14px 14px 32px;
     background: #fef3c7;
     border: 2px dashed var(--red);
-}
-
-.position-notes p {
     font-size: 14px;
     line-height: 1.6;
     color: #1f2937;
 }
 
-.position-notes p + p {
-    margin-top: 12px;
+.position-list li + li {
+    margin-top: 10px;
 }
 
 /* ─── Testimonials ─── */

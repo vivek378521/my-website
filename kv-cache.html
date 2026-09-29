@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KV Caching in LLMs | Vivek Khatri</title>
+    <meta name="description" content="An interactive visual guide to Key-Value caching techniques in Large Language Models.">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='46' fill='%23073b8e' stroke='%23fff' stroke-width='3' stroke-dasharray='6 3'/><text x='50' y='58' text-anchor='middle' fill='%23fff200' font-family='Georgia' font-size='36' font-weight='900'>VK</text></svg>">
+    <link rel="stylesheet" href="style.css">
+    <noscript><style>.reveal{opacity:1!important;transform:none!important}</style></noscript>
+    <style>
+        :root{
+            --c-cache:#10b981;--c-cache-l:#d1fae5;
+            --c-key:#8b5cf6;--c-key-l:#ede9fe;
+            --c-val:#f59e0b;--c-val-l:#fef3c7;
+            --c-q:#ef4444;--c-q-l:#fee2e2;
+            --c-attn:#3b82f6;--c-attn-l:#dbeafe;
+            --c-h2o:#ec4899;--c-h2o-l:#fce7f3;
+        }
+        *{box-sizing:border-box;margin:0;padding:0}
+        body{min-height:100vh;color:#111;background:radial-gradient(circle at 20% 30%,rgba(7,59,142,.04) 0%,transparent 50%),radial-gradient(circle at 80% 70%,rgba(215,25,32,.03) 0%,transparent 50%),#e8edf5;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-size:15px;line-height:1.6}
+        .page{position:relative;z-index:1;width:100%;min-height:100vh;margin:0 auto;background:#fefcf0}
+        a{color:#073b8e;font-weight:600;transition:color .15s}a:hover{color:#d71920}
+
+        .utility-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:6px 16px;color:#fff;background:#052b68;font-size:12px;font-weight:600}
+        .status-dot{color:#4ade80}.blink{animation:blink 1s steps(2,start) infinite}
+        @keyframes blink{50%{opacity:.2}}
+        .masthead{display:grid;grid-template-columns:92px 1fr 116px;gap:20px;align-items:center;padding:20px 24px;background:linear-gradient(90deg,#ff9933 0 14%,#fff 14% 86%,#138a36 86% 100%);border-bottom:3px solid #052b68}
+        .emblem{display:grid;place-items:center;width:82px;height:82px;color:#ffd166;background:#073b8e;border:4px double #fff;border-radius:50%;font-family:Georgia,serif;font-size:28px;font-weight:900;text-shadow:2px 2px 0 #000}
+        .ministry-line{color:#d71920;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+        .name{color:#052b68;font-family:Georgia,'Times New Roman',serif;font-size:clamp(2.8rem,7vw,6.8rem);line-height:.88;text-shadow:3px 3px 0 #ffd166}
+        .subtitle{margin-top:8px;color:#111;font-size:clamp(.95rem,1.6vw,1.25rem);font-weight:600}
+        .portrait{width:110px;height:110px;object-fit:cover;border:4px solid #052b68;background:#fff}
+        .main-nav{display:flex;flex-wrap:wrap;background:#073b8e}
+        .main-nav a{padding:10px 18px;color:#fff;border-right:1px solid rgba(255,255,255,.3);text-decoration:none;font-weight:600;transition:background .15s,color .15s}
+        .main-nav a:hover{color:#000;background:#ffd166}
+        .footer{display:flex;justify-content:space-between;gap:18px;padding:16px 24px;color:#fff;background:#052b68;border-top:3px solid #d71920}
+        .footer p{margin-top:4px;font-size:14px;opacity:.85}
+        .footer nav{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+        .footer a{color:#ffd166}
+
+        .kv-wrap{max-width:900px;margin:0 auto;padding:24px 20px 60px}
+
+        /* Hero */
+        .kv-hero{position:relative;overflow:hidden;padding:clamp(36px,7vw,72px) clamp(24px,4vw,48px);margin-bottom:48px;background:linear-gradient(135deg,#0f172a,#1e293b 40%,#0f172a);border:3px solid var(--c-cache);box-shadow:0 0 60px rgba(16,185,129,.2),4px 4px 0 rgba(0,0,0,.18)}
+        .kv-hero h1{color:#fff;font-family:Georgia,serif;font-size:clamp(2.4rem,5.5vw,4.8rem);line-height:1.05;text-shadow:0 0 30px rgba(16,185,129,.4)}
+        .kv-hero h1 em{color:var(--c-cache);font-style:normal}
+        .kv-hero .sub{margin-top:16px;color:#94a3b8;font-size:clamp(1rem,1.8vw,1.25rem);font-weight:500;max-width:680px}
+        .kv-hero .sub strong{color:var(--c-cache)}
+        #heroCanvas{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;opacity:.6}
+
+        /* Legend */
+        .legend{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:32px;padding:12px 16px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px}
+        .leg-item{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#475569}
+        .leg-dot{width:14px;height:14px;border:2px solid;border-radius:3px}
+
+        /* Section */
+        .sec{margin-bottom:48px;background:#fff;border:2px solid #1f2937;box-shadow:4px 4px 0 rgba(0,0,0,.18);overflow:hidden}
+        .sec-hd{padding:12px 20px;color:#fff;background:#073b8e;border-bottom:2px solid #1f2937;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;display:flex;align-items:center;gap:10px}
+        .sec-hd .n{display:inline-grid;place-items:center;width:28px;height:28px;color:#000;background:#ffd166;border:2px solid #000;border-radius:50%;font-size:13px;font-weight:900}
+        .sec-bd{padding:24px 28px}
+        .sec-bd p{margin-bottom:14px;font-size:15px;line-height:1.7;color:#1f2937}
+        .sec-bd p:last-child{margin-bottom:0}
+
+        /* Viz */
+        .viz{margin:20px 0;padding:20px;background:#f8fafc;border:2px solid #e2e8f0;border-radius:6px;overflow-x:auto}
+        .viz-lbl{margin-bottom:12px;color:#052b68;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+
+        /* Equation */
+        .eq{margin:16px 0;padding:14px 16px;background:#0f172a;border:2px solid #334155;color:#e2e8f0;font-family:'Courier New',monospace;font-size:14px;text-align:center;line-height:1.8;overflow-x:auto;border-radius:4px}
+        .eq .k{color:var(--c-key);font-weight:700}.eq .v{color:var(--c-val);font-weight:700}.eq .q{color:var(--c-q);font-weight:700}
+        .eq .c{color:var(--c-cache);font-weight:700}.eq .o{color:#94a3b8}.eq .h{color:var(--c-h2o);font-weight:700}
+
+        /* Analogy box */
+        .analogy{margin:20px 0;padding:20px 24px;background:#fffbeb;border-left:5px solid #f59e0b;border-radius:0 6px 6px 0;font-size:15px;line-height:1.7;color:#78350f}
+        .analogy strong{color:#92400e}
+        .analogy .label{display:inline-block;padding:2px 8px;background:#f59e0b;color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;border-radius:3px;margin-bottom:8px}
+
+        /* Token boxes */
+        .t-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+        .t-box{display:inline-grid;place-items:center;min-width:48px;height:38px;padding:0 10px;border:2px solid;font-family:'Courier New',monospace;font-size:13px;font-weight:700;transition:all .3s}
+        .t-box.in{color:#052b68;background:var(--c-attn-l);border-color:var(--c-attn)}
+        .t-box.cached{color:#065f46;background:var(--c-cache-l);border-color:var(--c-cache);box-shadow:0 0 8px rgba(16,185,129,.25)}
+        .t-box.new{color:#92400e;background:var(--c-val-l);border-color:var(--c-val);animation:pulseGlow 1.5s ease-in-out infinite}
+        @keyframes pulseGlow{0%,100%{box-shadow:0 0 0 0 rgba(245,158,11,.4)}50%{box-shadow:0 0 0 8px rgba(245,158,11,0)}}
+        @keyframes popIn{0%{transform:scale(0);opacity:0}60%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+        @keyframes slideRight{0%{transform:translateX(-20px);opacity:0}100%{transform:translateX(0);opacity:1}}
+        .t-box.pop{animation:popIn .4s ease both}
+        .t-box.slide{animation:slideRight .4s ease both}
+
+        /* Step controls */
+        .s-ctrls{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+        .s-btn{padding:8px 16px;color:#fff;background:#073b8e;border:2px solid #052b68;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;border-radius:4px}
+        .s-btn:hover{background:#052b68;transform:translateY(-1px)}
+        .s-btn.on{background:var(--c-cache);border-color:#065f46}
+        .s-btn.rst{background:#6b7280;border-color:#374151}
+
+        /* Step narrative */
+        .step-narrative{min-height:180px;padding:20px;background:#0f172a;border:2px solid #334155;border-radius:6px;color:#e2e8f0;font-family:'Courier New',monospace;font-size:13px;line-height:1.8;overflow:hidden;white-space:pre-wrap}
+        .step-narrative .narr{margin-bottom:6px}
+        .step-narrative .label-cache{color:var(--c-cache);font-weight:700}
+        .step-narrative .label-key{color:var(--c-key);font-weight:700}
+        .step-narrative .label-val{color:var(--c-val);font-weight:700}
+        .step-narrative .label-q{color:var(--c-q);font-weight:700}
+        .step-narrative .label-hl{color:var(--c-cache);font-weight:700}
+        .step-narrative .label-dim{color:#64748b}
+        .step-narrative .label-accent{color:var(--c-val);font-weight:700}
+
+        /* Compare panels */
+        .cmp{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+        .cmp-panel{padding:16px;border:2px solid;border-radius:6px}
+        .cmp-panel.no{background:#fef2f2;border-color:#fecaca}
+        .cmp-panel.no h4{color:#991b1b;margin-bottom:8px;font-size:14px}
+        .cmp-panel.yes{background:#ecfdf5;border-color:#a7f3d0}
+        .cmp-panel.yes h4{color:#065f46;margin-bottom:8px;font-size:14px}
+        .cmp-panel p{font-size:13px;line-height:1.6;color:#374151;margin-bottom:6px}
+
+        /* Savings bar */
+        .savings{display:flex;flex-direction:column;gap:10px}
+        .sav-row{display:flex;align-items:center;gap:10px}
+        .sav-row .lbl{min-width:100px;font-size:12px;font-weight:700;color:#475569}
+        .cbar{flex:1;height:32px;background:#e2e8f0;border-radius:4px;overflow:hidden}
+        .cfill{height:100%;border-radius:4px;display:flex;align-items:center;padding:0 10px;font-size:11px;font-weight:700;color:#fff;transition:width 1s ease;width:0}
+
+        /* Comparison bars */
+        .cmp-bars{margin:16px 0}
+
+        /* Heads viz */
+        .heads-viz{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+        .head-grp{display:flex;flex-direction:column;align-items:center;gap:4px}
+        .head-grp-lbl{font-size:10px;font-weight:700;color:#6b7280}
+        .head-blk{width:42px;height:34px;display:grid;place-items:center;border:2px solid;font-size:11px;font-weight:700;transition:all .3s}
+        .head-blk.active{opacity:1}
+
+        /* Tech cards */
+        .tech-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+        .tech-card{padding:16px;border:2px solid #e2e8f0;border-radius:6px;background:#f8fafc;text-align:center;transition:all .3s}
+        .tech-card h4{font-size:18px;margin-bottom:4px}
+        .tech-card.mha{border-color:var(--c-attn)}.tech-card.mha h4{color:var(--c-attn)}
+        .tech-card.gqa{border-color:var(--c-key)}.tech-card.gqa h4{color:var(--c-key)}
+        .tech-card.mqa{border-color:var(--c-cache)}.tech-card.mqa h4{color:var(--c-cache)}
+        .tech-card .formula{margin:8px 0;padding:6px;background:#0f172a;color:#e2e8f0;font-family:'Courier New',monospace;font-size:12px;border-radius:4px}
+        .tech-card p{font-size:13px;color:#475569;line-height:1.5}
+
+        /* Paged memory */
+        .paged-mem{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px}
+        .mem-pg{padding:10px;border:2px solid;border-radius:4px;text-align:center;transition:all .3s}
+        .mem-pg.alloc{background:#ecfdf5;border-color:var(--c-cache);color:#065f46}
+        .mem-pg.free{background:#f8fafc;border-color:#e2e8f0;color:#94a3b8}
+        .mem-pg .pid{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
+        .mem-pg .ptoks{font-family:'Courier New',monospace;font-size:12px}
+        @keyframes pageFlash{0%{box-shadow:0 0 0 0 rgba(16,185,129,.6)}100%{box-shadow:0 0 0 0 rgba(16,185,129,0)}}
+        .mem-pg.flash{animation:pageFlash .6s ease}
+
+        /* H2O */
+        .h2o-cache-row{display:flex;gap:6px;flex-wrap:wrap;min-height:40px;padding:8px;background:#f8fafc;border:2px solid #e2e8f0;border-radius:4px}
+        .h2o-token{display:inline-flex;flex-direction:column;align-items:center;padding:6px 10px;border:2px solid;font-size:12px;font-weight:700;border-radius:4px}
+        .h2o-token.kept{background:var(--c-cache-l);border-color:var(--c-cache);color:#065f46}
+        .h2o-score{font-size:9px;font-weight:600;color:#6b7280;margin-top:2px}
+        .h2o-threshold{margin-top:8px;padding:4px 12px;background:#fef2f2;border:1px dashed var(--c-h2o);border-radius:4px;font-size:11px;color:var(--c-h2o);font-weight:600;text-align:center;opacity:.7}
+
+        /* Playground */
+        .pg{background:#0f172a;border:2px solid #334155;border-radius:6px;overflow:hidden}
+        .pg-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding:12px 16px;background:#1e293b;border-bottom:1px solid #334155}
+        .pg-hd h4{font-size:14px;color:var(--c-cache);font-family:'Courier New',monospace}
+        .pg-out{padding:16px;font-family:'Courier New',monospace;font-size:12px;line-height:1.8;color:#e2e8f0;max-height:400px;overflow-y:auto}
+        .pg-out .ll{opacity:0;animation:logIn .3s ease forwards}
+        @keyframes logIn{to{opacity:1}}
+
+        /* Log colors */
+        .lt{color:var(--c-attn)}.lk{color:var(--c-key)}.lv{color:var(--c-val)}.lc{color:var(--c-cache)}.lq{color:var(--c-q)}.li{color:#94a3b8}.ls{color:#34d399}.lh{color:var(--c-h2o)}
+
+        /* Responsive */
+        @media(max-width:720px){.cmp,.tech-cards{grid-template-columns:1fr}.kv-hero h1{font-size:2.2rem}.sav-row{grid-template-columns:1fr}}
+        @media(max-width:480px){.kv-wrap{padding:12px 10px 40px}.sec-bd{padding:16px}.viz{padding:12px}}
+        @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+    </style>
+</head>
+<body>
+<div class="page">
+    <header class="site-header" id="top">
+        <div class="utility-bar">
+            <span>भारत / जापान / Backend Systems</span>
+            <span class="status-dot blink">● OPEN FOR WORK</span>
+            <span>Last updated: August 2026</span>
+        </div>
+        <div class="masthead">
+            <div class="emblem">VK</div>
+            <div>
+                <p class="ministry-line">Personal Engineering Portal</p>
+                <h1 class="name">Vivek Khatri</h1>
+                <p class="subtitle">Product Engineer · Backend Systems · Features · Data Pipelines · Automation</p>
+            </div>
+            <img src="my-face.jpeg" alt="Vivek Khatri" class="portrait" loading="lazy">
+        </div>
+        <nav class="main-nav" aria-label="Primary navigation">
+            <a href="index.html#profile">Profile</a>
+            <a href="index.html#skills">How I work</a>
+            <a href="index.html#projects">Projects</a>
+            <a href="kv-cache.html" style="background:#ffd166;color:#000;">KV Cache</a>
+            <a href="index.html#contact">Contact</a>
+            <a href="https://drive.google.com/file/d/19Wa-6nKX6SU4irh_yiMC8AuhtA-2hX3K/view?usp=sharing" target="_blank" rel="noopener">Resume</a>
+        </nav>
+    </header>
+
+    <main class="kv-wrap">
+        <!-- HERO -->
+        <section class="kv-hero reveal">
+            <canvas id="heroCanvas"></canvas>
+            <h1>KV Caching <em>in LLMs</em></h1>
+            <p class="sub">Every time a language model generates a word, it needs to "remember" all previous words. KV caching is the trick that makes this fast. Here's how it works — from the basics to production techniques.</p>
+        </section>
+
+        <div class="legend reveal">
+            <div class="leg-item"><span class="leg-dot" style="background:var(--c-q-l);border-color:var(--c-q)"></span> Query</div>
+            <div class="leg-item"><span class="leg-dot" style="background:var(--c-key-l);border-color:var(--c-key)"></span> Key</div>
+            <div class="leg-item"><span class="leg-dot" style="background:var(--c-val-l);border-color:var(--c-val)"></span> Value</div>
+            <div class="leg-item"><span class="leg-dot" style="background:var(--c-cache-l);border-color:var(--c-cache)"></span> Cached</div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════ -->
+        <!-- SECTION 1: WHY KV CACHE EXISTS -->
+        <!-- ═══════════════════════════════════════════════ -->
+        <section class="sec reveal">
+            <div class="sec-hd"><span class="n">1</span> Why KV Cache Exists</div>
+            <div class="sec-bd">
+                <div class="analogy">
+                    <span class="label">Analogy</span><br>
+                    <strong>Think of a chef cooking a multi-course meal.</strong> Without KV caching, the chef re-reads the entire recipe before every single dish. With KV caching, the chef keeps a running summary of what's been done — and only reads the new step.
+                </div>
+
+                <p>When an LLM generates text one token at a time (autoregressive decoding), it computes <strong>attention</strong> at every step. Attention uses three vectors per token:</p>
+
+                <div class="eq">
+                    <span class="o">Attention(</span><span class="q">Q</span><span class="o">,</span> <span class="k">K</span><span class="o">,</span> <span class="v">V</span><span class="o">) = softmax(</span><span class="q">Q</span><span class="o"> · </span><span class="k">K</span><span class="o"><sup>T</sup> / √d) · </span><span class="v">V</span>
+                </div>
+
+                <p>Every token produces its own <strong style="color:var(--c-q)">Q</strong>uery, <strong style="color:var(--c-key)">K</strong>ey, and <strong style="color:var(--c-val)">V</strong>alue. The Query asks "what am I looking for?", the Key says "what do I contain?", and the Value says "what do I pass on?".</p>
+
+                <p><strong>The problem:</strong> at step N, the model needs the K and V of <em>every previous token</em> to compute attention. Without caching, it recomputes all of them from scratch — every single time.</p>
+
+                <div class="viz">
+                    <div class="viz-lbl">Without cache vs. With cache — for a 5-token sequence</div>
+                    <div class="cmp">
+                        <div class="cmp-panel no">
+                            <h4>✗ Without Cache</h4>
+                            <p>Step 1: compute K,V for [The]</p>
+                            <p>Step 2: recompute K,V for [The, quick]</p>
+                            <p>Step 3: recompute K,V for [The, quick, brown]</p>
+                            <p style="margin-top:8px;font-weight:700;color:#991b1b">Total: 15 K,V computations (1+2+3+4+5)</p>
+                        </div>
+                        <div class="cmp-panel yes">
+                            <h4>✓ With KV Cache</h4>
+                            <p>Step 1: compute K,V for [The] → store</p>
+                            <p>Step 2: fetch cached K,V, compute only for [quick]</p>
+                            <p>Step 3: fetch cached K,V, compute only for [brown]</p>
+                            <p style="margin-top:8px;font-weight:700;color:#065f46">Total: 5 K,V computations (1+1+1+1+1)</p>
+                        </div>
+                    </div>
+                    <div class="cmp-bars">
+                        <div class="savings">
+                            <div class="sav-row"><span class="lbl">Without Cache</span><div class="cbar"><div class="cfill" data-w="100" style="background:var(--c-q)">O(n²) — 15 ops</div></div></div>
+                            <div class="sav-row"><span class="lbl">With Cache</span><div class="cbar"><div class="cfill" data-w="33" style="background:var(--c-cache)">O(n) — 5 ops</div></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <p>That's the core idea: <strong>store K and V from past tokens so you never recompute them.</strong> The rest of this page explains the details and the techniques built on top of this idea.</p>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════ -->
+        <!-- SECTION 2: HOW IT WORKS -->
+        <!-- ═══════════════════════════════════════════════ -->
+        <section class="sec reveal">
+            <div class="sec-hd"><span class="n">2</span> How It Works — Step by Step</div>
+            <div class="sec-bd">
+                <p>Let's walk through it with the sentence <strong>"The quick brown fox jumps"</strong>. Click each step to watch the KV cache build up. Only the <em>new token's</em> K and V are computed — everything else comes from cache.</p>
+
+                <div class="viz">
+                    <div class="s-ctrls" id="stepBtns">
+                        <button class="s-btn on" onclick="setStep(1)">Step 1: "The"</button>
+                        <button class="s-btn" onclick="setStep(2)">Step 2: "quick"</button>
+                        <button class="s-btn" onclick="setStep(3)">Step 3: "brown"</button>
+                        <button class="s-btn" onclick="setStep(4)">Step 4: "fox"</button>
+                        <button class="s-btn" onclick="setStep(5)">Step 5: "jumps"</button>
+                        <button class="s-btn rst" onclick="autoStep()">▶ Auto Play</button>
+                    </div>
+                    <div class="step-narrative" id="stepDisplay"></div>
+                    <div id="stepTokens" class="t-row" style="margin-top:16px"></div>
+                </div>
+
+                <p>Notice how each step only computes <strong style="color:var(--c-val)">one new K,V pair</strong>. The cached tokens (shown in <span style="color:var(--c-cache);font-weight:700">green</span>) are fetched from memory — no math needed. This is why KV caching turns O(n²) work into O(n) work.</p>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════ -->
+        <!-- SECTION 3: THE MEMORY PROBLEM -->
+        <!-- ═══════════════════════════════════════════════ -->
+        <section class="sec reveal">
+            <div class="sec-hd"><span class="n">3</span> The Memory Problem</div>
+            <div class="sec-bd">
+                <p>KV caching solves the speed problem — but creates a <strong>memory problem</strong>. Every attention head stores its own K and V cache. More heads = more memory.</p>
+
+                <div class="viz">
+                    <div class="viz-lbl">8 attention heads — each maintaining independent K and V caches</div>
+                    <div class="heads-viz" id="headsViz"></div>
+                    <div style="text-align:center;margin-top:14px;font-size:13px;color:#475569"><strong>Cache per token = 2 × num_heads × head_dim</strong></div>
+                </div>
+
+                <div class="analogy">
+                    <span class="label">Real numbers</span><br>
+                    <strong>LLaMA-2 70B</strong> has 64 attention heads. For a single 4,000-token sequence, the KV cache alone can consume <strong>~40 GB</strong> of GPU memory. That's more than the model weights themselves in some configurations.
+                </div>
+
+                <p>This memory pressure is what drove researchers to develop <strong>KV sharing techniques</strong> — ways to reduce the number of independent KV caches without losing quality.</p>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════ -->
+        <!-- SECTION 4: MHA vs GQA vs MQA -->
+        <!-- ═══════════════════════════════════════════════ -->
+        <section class="sec reveal">
+            <div class="sec-hd"><span class="n">4</span> KV Sharing — MHA vs GQA vs MQA</div>
+            <div class="sec-bd">
+                <p>The idea is simple: <strong>share KV caches between query heads</strong>. Fewer KV caches means less memory. The question is how aggressively to share.</p>
+
+                <div class="tech-cards">
+                    <div class="tech-card mha">
+                        <h4>MHA</h4>
+                        <p><strong>Multi-Head Attention</strong></p>
+                        <div class="formula">32 Q heads, 32 KV heads</div>
+                        <p>Each head has its own Q, K, V. Maximum quality, maximum memory. The baseline.</p>
+                    </div>
+                    <div class="tech-card gqa">
+                        <h4>GQA</h4>
+                        <p><strong>Grouped Query Attention</strong></p>
+                        <div class="formula">32 Q heads, 8 KV heads</div>
+                        <p>Groups of 4 query heads share one KV head. Best balance of quality and memory.</p>
+                    </div>
+                    <div class="tech-card mqa">
+                        <h4>MQA</h4>
+                        <p><strong>Multi-Query Attention</strong></p>
+                        <div class="formula">32 Q heads, 1 KV head</div>
+                        <p>All query heads share a single KV head. Maximum memory savings.</p>
+                    </div>
+                </div>
+
+                <div class="viz">
+                    <div class="viz-lbl">KV cache memory comparison (32 query heads)</div>
+                    <div class="savings">
+                        <div class="sav-row"><span class="lbl" style="color:var(--c-attn)">MHA</span><div class="cbar"><div class="cfill" data-w="100" style="background:var(--c-attn)">32 KV heads — 100%</div></div></div>
+                        <div class="sav-row"><span class="lbl" style="color:var(--c-key)">GQA</span><div class="cbar"><div class="cfill" data-w="25" style="background:var(--c-key)">8 KV heads — 25%</div></div></div>
+                        <div class="sav-row"><span class="lbl" style="color:var(--c-cache)">MQA</span><div class="cbar"><div class="cfill" data-w="4" style="background:var(--c-cache);min-width:60px">1 KV head — 3%</div></div></div>
+                    </div>
+                </div>
+
+                <div class="viz">
+                    <div class="viz-lbl">Click to see how query heads map to KV heads</div>
+                    <div class="s-ctrls">
+                        <button class="s-btn on" id="mhaBtn" onclick="showSharing('mha')">MHA</button>
+                        <button class="s-btn" id="gqaBtn" onclick="showSharing('gqa')">GQA</button>
+                        <button class="s-btn" id="mqaBtn" onclick="showSharing('mqa')">MQA</button>
+                    </div>
+                    <div id="sharingViz" style="min-height:120px"></div>
+                </div>
+
+                <p><strong>GQA</strong> is the sweet spot — it's what LLaMA-2, Mistral, and most modern LLMs use. You get most of MHA's quality with a fraction of the memory.</p>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════ -->
+        <!-- SECTION 5: BEYOND BASICS -->
+        <!-- ═══════════════════════════════════════════════ -->
+        <section class="sec reveal">
+            <div class="sec-hd"><span class="n">5</span> Beyond the Basics</div>
+            <div class="sec-bd">
+                <p>Two more techniques tackle different aspects of the KV cache problem: <strong>memory layout</strong> and <strong>cache size</strong>.</p>
+
+                <h4 style="color:var(--c-attn);margin:16px 0 8px;font-size:15px">PagedAttention — Memory Without Waste</h4>
+                <p>Traditional KV cache allocates one contiguous block of GPU memory per sequence. This wastes memory when sequences are different lengths (like in a serving system handling many requests). <strong>PagedAttention</strong> (from vLLM) splits the cache into small fixed-size <strong>pages</strong>, like an operating system's virtual memory. Pages can be allocated on demand and freed when done — no wasted space.</p>
+
+                <div class="viz">
+                    <div class="viz-lbl">Paged memory — allocate and free pages interactively</div>
+                    <div class="paged-mem" id="pagedMem"></div>
+                    <div class="s-ctrls" style="margin-top:16px">
+                        <button class="s-btn" onclick="pagedAlloc()">+ Allocate Page</button>
+                        <button class="s-btn" onclick="pagedDealloc()">- Free Page</button>
+                        <button class="s-btn rst" onclick="pagedReset()">⟲ Reset</button>
+                    </div>
+                </div>
+
+                <h4 style="color:var(--c-h2o);margin:24px 0 8px;font-size:15px">H2O — Not All Tokens Matter Equally</h4>
+                <p>In natural language, some tokens get much more attention than others. Function words like "the" or "is" rarely matter — content words like "Python" or "transformer" do. <strong>H2O (Heavy-Hitter Oracle)</strong> exploits this: it tracks accumulated attention scores and <strong>evicts low-attention tokens</strong> when the cache is full, keeping only the "heavy hitters."</p>
+
+                <div class="eq">
+                    <span class="o">Score(t) = Σ attention received across all steps</span><br>
+                    <span class="o">Evict min(Score) when full → keep </span><span class="c">heavy hitters</span><span class="o">, drop </span><span class="h">light hitters</span>
+                </div>
+
+                <div class="viz">
+                    <div class="viz-lbl">H2O simulation — tokens enter, scores accumulate, low-scorers get evicted</div>
+                    <div class="s-ctrls">
+                        <button class="s-btn on" id="h2oPlayBtn" onclick="runH2O()">▶ Play</button>
+                        <button class="s-btn rst" onclick="resetH2O()">⟲ Reset</button>
+                        <span style="font-size:12px;color:#6b7280;font-weight:600;margin-left:8px">Cache budget: <strong>5</strong> tokens</span>
+                    </div>
+                    <div style="margin-bottom:6px;font-size:12px;color:#6b7280;font-weight:600">Cache contents:</div>
+                    <div class="h2o-cache-row" id="h2oCache"></div>
+                    <div class="h2o-threshold">eviction threshold — tokens below are candidates</div>
+                    <div style="margin-top:10px;font-size:12px;color:#6b7280;font-weight:600">Event log:</div>
+                    <div id="h2oLog" style="padding:10px 12px;background:#1e293b;border-radius:4px;font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;max-height:160px;overflow-y:auto;min-height:40px"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════ -->
+        <!-- SECTION 6: SUMMARY -->
+        <!-- ═══════════════════════════════════════════════ -->
+        <section class="sec reveal">
+            <div class="sec-hd"><span class="n">6</span> Summary</div>
+            <div class="sec-bd">
+                <div class="viz">
+                    <div class="viz-lbl">All techniques at a glance</div>
+                    <div style="overflow-x:auto">
+                        <table style="width:100%;border-collapse:collapse;background:#fff">
+                            <thead><tr>
+                                <th style="padding:10px 12px;border:2px solid #1f2937;background:#138a36;color:#fff;font-size:13px;text-transform:uppercase;text-align:left">Technique</th>
+                                <th style="padding:10px 12px;border:2px solid #1f2937;background:#138a36;color:#fff;font-size:13px;text-transform:uppercase;text-align:left">KV Heads</th>
+                                <th style="padding:10px 12px;border:2px solid #1f2937;background:#138a36;color:#fff;font-size:13px;text-transform:uppercase;text-align:left">Memory per Token</th>
+                                <th style="padding:10px 12px;border:2px solid #1f2937;background:#138a36;color:#fff;font-size:13px;text-transform:uppercase;text-align:left">Used In</th>
+                            </tr></thead>
+                            <tbody>
+                                <tr><td style="padding:10px 12px;border:2px solid #1f2937"><strong>MHA</strong></td><td style="padding:10px 12px;border:2px solid #1f2937">h (all)</td><td style="padding:10px 12px;border:2px solid #1f2937">2 × h × d</td><td style="padding:10px 12px;border:2px solid #1f2937">GPT-3, BERT</td></tr>
+                                <tr style="background:#fff7ad"><td style="padding:10px 12px;border:2px solid #1f2937"><strong>GQA</strong></td><td style="padding:10px 12px;border:2px solid #1f2937">g (grouped)</td><td style="padding:10px 12px;border:2px solid #1f2937">2 × g × d</td><td style="padding:10px 12px;border:2px solid #1f2937">LLaMA-2, Mistral</td></tr>
+                                <tr><td style="padding:10px 12px;border:2px solid #1f2937"><strong>MQA</strong></td><td style="padding:10px 12px;border:2px solid #1f2937">1 (shared)</td><td style="padding:10px 12px;border:2px solid #1f2937">2 × d</td><td style="padding:10px 12px;border:2px solid #1f2937">PaLM, Falcon</td></tr>
+                                <tr><td style="padding:10px 12px;border:2px solid #1f2937"><strong>PagedAttention</strong></td><td style="padding:10px 12px;border:2px solid #1f2937">Any</td><td style="padding:10px 12px;border:2px solid #1f2937">Pages (4-16 tok)</td><td style="padding:10px 12px;border:2px solid #1f2937">vLLM, SGLang</td></tr>
+                                <tr><td style="padding:10px 12px;border:2px solid #1f2937"><strong style="color:var(--c-h2o)">H2O</strong></td><td style="padding:10px 12px;border:2px solid #1f2937">Dynamic</td><td style="padding:10px 12px;border:2px solid #1f2937">Budget B tokens</td><td style="padding:10px 12px;border:2px solid #1f2937">Research</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="eq" style="margin-top:20px">
+                    <span style="color:#f472b6;font-weight:700">TL;DR</span><br>
+                    <span class="c">KV Cache</span> <span class="o">= store past K,V → avoid recomputation → </span><span class="c">O(n)</span> <span class="o">instead of</span> <span class="q">O(n²)</span><br>
+                    <span class="k">GQA</span> <span class="o">= share KV across query groups → 75% less memory</span><br>
+                    <span class="c">PagedAttention</span> <span class="o">= OS-style pages → zero memory waste</span><br>
+                    <span class="h">H2O</span> <span class="o">= evict low-attention tokens → smaller cache, same quality</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer" id="contact">
+        <div><strong>Contact Desk</strong><br><a href="mailto:vvk3785@gmail.com" style="color:#ffd166;font-weight:600">vvk3785@gmail.com</a><p>For backend, data, automation, and full-product engineering work.</p></div>
+        <nav><a href="https://github.com/vivek378521" target="_blank" rel="noopener">GitHub</a><a href="https://linkedin.com/in/vivekkhatri007" target="_blank" rel="noopener">LinkedIn</a><a href="mailto:vvk3785@gmail.com">Email</a></nav>
+    </footer>
+</div>
+
+<script>
+document.querySelectorAll('a[href^="#"]').forEach(function(a){a.addEventListener('click',function(e){e.preventDefault();var t=document.querySelector(this.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth'})})});
+var ri=document.querySelectorAll('.reveal');
+if('IntersectionObserver' in window){var obsRev=new IntersectionObserver(function(es,ob){es.forEach(function(e){if(!e.isIntersecting)return;e.target.classList.add('visible');ob.unobserve(e.target)})},{threshold:0.18});ri.forEach(function(i){obsRev.observe(i)})}
+</script>
+<script>
+(function(){
+var C={q:'#ef4444',k:'#8b5cf6',v:'#f59e0b',c:'#10b981',a:'#3b82f6',h:'#ec4899'};
+var TK=['The','quick','brown','fox','jumps','over','the','lazy','dog'];
+
+// ═══ HERO CANVAS ═══
+var cv=document.getElementById('heroCanvas');
+if(cv){
+    var ctx=cv.getContext('2d'),W,H;
+    function resize(){W=cv.width=cv.offsetWidth;H=cv.height=cv.offsetHeight}
+    resize();window.addEventListener('resize',resize);
+    var particles=[],colors=[C.c,C.k,C.v,C.a];
+    for(var i=0;i<40;i++)particles.push({x:Math.random()*2e3,y:Math.random()*2e3,r:2+Math.random()*3,c:colors[i%4],vx:(Math.random()-.5)*.6,vy:-.2-Math.random()*.5,life:Math.random()*200|0,ml:150+Math.random()*150|0});
+    (function draw(){ctx.clearRect(0,0,W,H);particles.forEach(function(p){p.x+=p.vx;p.y+=p.vy;p.life++;if(p.life>p.ml){p.x=Math.random()*W;p.y=H+10;p.life=0}var a=Math.max(0,1-p.life/p.ml)*.6;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=p.c;ctx.globalAlpha=a;ctx.fill();ctx.globalAlpha=1});requestAnimationFrame(draw)})();
+}
+
+// ═══ SECTION 2: STEP-BY-STEP ═══
+var curStep=1,autoTimer=null;
+var stepNarratives=[
+    {title:'Step 1: "The" arrives',
+     lines:[
+         'The very first token enters the model.',
+         '',
+         '  Compute K and V for "The" → these go into the cache.',
+         '',
+         '  Cache: [ K₁, V₁ ]',
+         '  Size: 1 entry',
+         '',
+         '  Attention: Q₁ · K₁^T → score → output',
+         '',
+         '  Nothing was cached before, so we compute everything from scratch.'
+     ]},
+    {title:'Step 2: "quick" arrives',
+     lines:[
+         'A new token needs attention over all previous tokens.',
+         '',
+         '  Fetch cached K,V for "The" ← from cache (free!)',
+         '  Compute K and V for "quick" ← new work',
+         '',
+         '  Cache: [ K₁,V₁ | K₂,V₂ ]',
+         '  Size: 2 entries',
+         '',
+         '  Attention: Q₂ · [K₁,K₂]^T → scores[2] → softmax → ·[V₁,V₂] → output',
+         '',
+         '  Saved 1 recomputation by reusing K₁,V₁ from cache.'
+     ]},
+    {title:'Step 3: "brown" arrives',
+     lines:[
+         'The cache is growing — each new token only adds to it.',
+         '',
+         '  Fetch cached K,V for "The","quick" ← from cache',
+         '  Compute K and V for "brown" ← new work only',
+         '',
+         '  Cache: [ K₁,V₁ | K₂,V₂ | K₃,V₃ ]',
+         '  Size: 3 entries',
+         '',
+         '  Attention: Q₃ · [K₁,K₂,K₃]^T → scores[3] → · [V₁,V₂,V₃] → output',
+         '',
+         '  Saved 2 recomputations. The pattern is clear.'
+     ]},
+    {title:'Step 4: "fox" arrives',
+     lines:[
+         'By now the pattern is obvious:',
+         '',
+         '  Fetch K,V for ["The","quick","brown"] ← cache',
+         '  Compute K,V for "fox" ← 1 new computation',
+         '',
+         '  Cache: [ K₁,V₁ | K₂,V₂ | K₃,V₃ | K₄,V₄ ]',
+         '  Size: 4 entries',
+         '',
+         '  Saved 3 recomputations this step.',
+         '  Total saved so far: 1+2+3 = 6'
+     ]},
+    {title:'Step 5: "jumps" arrives',
+     lines:[
+         'The fifth token reuses all four cached entries.',
+         '',
+         '  Fetch K,V for ["The","quick","brown","fox"] ← cache',
+         '  Compute K,V for "jumps" ← 1 new computation',
+         '',
+         '  Cache: [ K₁,V₁ | K₂,V₂ | K₃,V₃ | K₄,V₄ | K₅,V₅ ]',
+         '  Size: 5 entries',
+         '',
+         '  Saved 4 recomputations this step.',
+         '  Total saved: 1+2+3+4 = 10 out of 15 possible → 67% reduction!'
+     ]}
+];
+function renderStep(){
+    var el=document.getElementById('stepDisplay'),tl=document.getElementById('stepTokens');
+    if(!el)return;
+    var n=stepNarratives[curStep-1];
+    var h='<span style="color:#f59e0b;font-weight:700">── '+n.title+' ──</span>\n\n';
+    n.lines.forEach(function(l){
+        if(l.indexOf('Cache:')===0)h+='<span class="label-cache">'+l+'</span>';
+        else if(l.indexOf('Fetch')===0||l.indexOf('Saved')===0)h+='<span class="label-hl">'+l+'</span>';
+        else if(l.indexOf('Compute')===0)h+='<span class="label-accent">'+l+'</span>';
+        else if(l.indexOf('Attention:')===0)h+='<span class="label-key">'+l+'</span>';
+        else if(l==='')h+='\n';
+        else h+='<span>'+l+'</span>';
+        h+='\n';
+    });
+    el.innerHTML=h;
+    if(tl){tl.innerHTML='';var st=TK.slice(0,curStep);st.forEach(function(t,i){
+        var b=document.createElement('span');b.className='t-box '+(i===st.length-1?'new':'cached')+' slide';
+        b.textContent=t;b.style.animationDelay=(i*.08)+'s';tl.appendChild(b);
+    })}
+}
+renderStep();
+window.setStep=function(s){curStep=s;clearInterval(autoTimer);autoTimer=null;document.querySelectorAll('#stepBtns .s-btn:not(.rst)').forEach(function(b,i){b.classList.toggle('on',i===s-1)});renderStep()};
+window.autoStep=function(){curStep=1;clearInterval(autoTimer);document.querySelectorAll('#stepBtns .s-btn:not(.rst)').forEach(function(b){b.classList.remove('on')});autoTimer=setInterval(function(){if(curStep>5){clearInterval(autoTimer);autoTimer=null;return}window.setStep(curStep);curStep++},2000);window.setStep(1);curStep=2};
+
+// ═══ SECTION 3: HEADS VIZ ═══
+var hv=document.getElementById('headsViz');
+if(hv){for(var hi=0;hi<8;hi++){var hg=document.createElement('div');hg.className='head-grp';var hl=document.createElement('div');hl.className='head-grp-lbl';hl.textContent='Head '+(hi+1);hg.appendChild(hl);[{t:'Q',col:C.q,bg:'#fee2e2'},{t:'K',col:C.k,bg:'#ede9fe'},{t:'V',col:C.v,bg:'#fef3c7'},{t:'Cache',col:C.c,bg:'#d1fae5'}].forEach(function(o){var d=document.createElement('div');d.className='head-blk active';d.style.borderColor=o.col;d.style.background=o.bg;d.style.color=o.col;d.style.animationDelay=(hi*.12)+'s';d.textContent=o.t;hg.appendChild(d)});hv.appendChild(hg)}}
+
+// ═══ SECTION 4: SHARING VIZ ═══
+window.showSharing=function(mode){
+    ['mha','gqa','mqa'].forEach(function(m){var b=document.getElementById(m+'Btn');if(b)b.classList.toggle('on',m===mode)});
+    var ct=document.getElementById('sharingViz');if(!ct)return;
+    var nq=8,nkv=mode==='mha'?nq:mode==='gqa'?2:1,gs=nq/nkv;
+    var cols=['#3b82f6','#8b5cf6','#f59e0b','#10b981','#ef4444','#06b6d4','#ec4899','#f97316'];
+    var h='<div style="display:flex;gap:24px;justify-content:center;flex-wrap:wrap">';
+    h+='<div><div style="font-size:12px;font-weight:700;color:#ef4444;margin-bottom:8px;text-align:center">Query Heads</div><div style="display:flex;gap:4px;flex-wrap:wrap">';
+    for(var si=0;si<nq;si++){var co=cols[Math.floor(si/gs)%cols.length];h+='<div class="head-blk active" style="width:50px;height:40px;border-color:'+co+';background:'+co+'22;color:'+co+';animation-delay:'+(si*.06)+'s;font-size:11px">Q'+(si+1)+'</div>'}
+    h+='</div></div><div style="display:flex;align-items:center;font-size:28px;color:#94a3b8">→</div>';
+    h+='<div><div style="font-size:12px;font-weight:700;color:#10b981;margin-bottom:8px;text-align:center">KV Heads'+(mode!=='mha'?' (shared)':'')+'</div><div style="display:flex;gap:6px;flex-wrap:wrap">';
+    for(var si2=0;si2<nkv;si2++){var co2=cols[si2%cols.length],ns=mode==='mha'?1:mode==='gqa'?gs:nq;h+='<div class="head-blk active" style="width:56px;height:44px;border-color:'+co2+';background:'+co2+'33;color:'+co2+';animation-delay:'+(si2*.15)+'s;font-size:10px">KV'+(si2+1)+(ns>1?'<br><span style="font-size:8px">('+ns+'x)</span>':'')+'</div>'}
+    h+='</div></div></div>';
+    var desc=mode==='mha'?'MHA: each query head has its own KV head. Maximum flexibility, maximum memory.':mode==='gqa'?'GQA: groups of '+gs+' query heads share one KV head. Same quality, 75% less KV memory.':'MQA: all '+nq+' query heads share a single KV head. Maximum compression.';
+    h+='<div style="text-align:center;margin-top:14px;font-size:13px;font-weight:600;color:'+(mode==='mha'?'#6b7280':mode==='gqa'?C.k:C.c)+'">'+desc+'</div>';
+    ct.innerHTML=h;
+};
+window.showSharing('mha');
+
+// ═══ SECTION 5: PAGED ATTENTION ═══
+var pages=[{id:0,t:['The','quick'],a:true},{id:1,t:['brown','fox'],a:true},{id:2,t:['jumps','over'],a:true},{id:3,t:[],a:false},{id:4,t:[],a:false},{id:5,t:[],a:false},{id:6,t:[],a:false},{id:7,t:[],a:false}];
+var pNext=0,pToks=['the','lazy','dog','sleeps','now','soundly','while','birds','sing'];
+function renderPages(){var c=document.getElementById('pagedMem');if(!c)return;c.innerHTML='';pages.forEach(function(p){var d=document.createElement('div');d.className='mem-pg '+(p.a?'alloc':'free');d.innerHTML='<div class="pid">Page '+p.id+'</div><div class="ptoks">'+(p.a?p.t.join(' '):'empty')+'</div>';c.appendChild(d)})}
+window.pagedAlloc=function(){var f=pages.find(function(p){return!p.a});if(!f)return;f.a=true;f.t=[pToks[pNext%pToks.length],pToks[(pNext+1)%pToks.length]];pNext+=2;renderPages();var all=document.querySelectorAll('.mem-pg.alloc');if(all.length)all[all.length-1].classList.add('flash')};
+window.pagedDealloc=function(){var l=[].concat(pages).reverse().find(function(p){return p.a});if(l){l.a=false;l.t=[];renderPages()}};
+window.pagedReset=function(){pages.forEach(function(p,i){p.a=i<3;p.t=i===0?['The','quick']:i===1?['brown','fox']:i===2?['jumps','over']:[]});pNext=6;renderPages()};
+renderPages();
+
+// ═══ SECTION 5: H2O ═══
+var H2O_BUDGET=5,h2oState={cache:[],scores:{},running:false,timer:null};
+var h2oSequence=['The','quick','brown','fox','jumps','over','the','lazy','dog','sleeps','now'];
+function renderH2O(){var cc=document.getElementById('h2oCache');if(!cc)return;cc.innerHTML='';h2oState.cache.forEach(function(t){var d=document.createElement('span');d.className='h2o-token kept';d.textContent=t;var sc=document.createElement('span');sc.className='h2o-score';sc.textContent=h2oState.scores[t]?h2oState.scores[t].toFixed(2):'0.00';d.appendChild(sc);cc.appendChild(d)});if(!h2oState.cache.length)cc.innerHTML='<span style="color:#94a3b8;font-size:12px;font-style:italic">Cache empty — press Play</span>'}
+function h2oLogMsg(msg){var lg=document.getElementById('h2oLog');if(!lg)return;var s=document.createElement('div');s.className='ll';s.style.animationDelay='0s';s.innerHTML=msg;lg.appendChild(s);lg.scrollTop=lg.scrollHeight}
+window.runH2O=function(){if(h2oState.running)return;h2oState.running=true;var btn=document.getElementById('h2oPlayBtn');if(btn)btn.textContent='Playing...';h2oState.cache=[];h2oState.scores={};var lg=document.getElementById('h2oLog');if(lg)lg.innerHTML='';h2oLogMsg('<span style="color:#94a3b8">── H2O Simulation (budget='+H2O_BUDGET+') ──</span>');var idx=0;h2oState.timer=setInterval(function(){if(idx>=h2oSequence.length){clearInterval(h2oState.timer);h2oState.running=false;if(btn)btn.textContent='▶ Play';h2oLogMsg('<span class="lc">Done — final cache: ['+h2oState.cache.join(', ')+']</span>');return}var tok=h2oSequence[idx];var attnScore=(0.1+Math.random()*0.9);h2oLogMsg('<span style="color:#94a3b8">Step '+(idx+1)+':</span> <span class="lt">"'+tok+'"</span> attn='+attnScore.toFixed(2));h2oState.cache.forEach(function(t){h2oState.scores[t]=(h2oState.scores[t]||0)+Math.random()*0.5});h2oState.cache.push(tok);h2oState.scores[tok]=attnScore;if(h2oState.cache.length>H2O_BUDGET){var minTok=h2oState.cache[0],minSc=Infinity;h2oState.cache.forEach(function(t){if(h2oState.scores[t]<minSc){minSc=h2oState.scores[t];minTok=t}});h2oState.cache=h2oState.cache.filter(function(t){return t!==minTok});h2oLogMsg('  <span class="lh">EVICT "'+minTok+'" (score='+minSc.toFixed(2)+')</span> → size: '+h2oState.cache.length)}else{h2oLogMsg('  <span class="lc">Cache OK</span> → size: '+h2oState.cache.length+'/'+H2O_BUDGET)}renderH2O();idx++},1000)};
+window.resetH2O=function(){clearInterval(h2oState.timer);h2oState={cache:[],scores:{},running:false,timer:null};renderH2O();var lg=document.getElementById('h2oLog');if(lg)lg.innerHTML='';var btn=document.getElementById('h2oPlayBtn');if(btn)btn.textContent='▶ Play'};
+renderH2O();
+
+// ═══ SCROLL BAR ANIMATIONS ═══
+var obsBar=new IntersectionObserver(function(entries){entries.forEach(function(e){if(!e.isIntersecting)return;e.target.querySelectorAll('.cfill').forEach(function(f){f.style.width=f.dataset.w+'%'});obsBar.unobserve(e.target)})},{threshold:0.3});
+document.querySelectorAll('.savings').forEach(function(el){obsBar.observe(el)});
+
+})();
+</script>
+</body>
+</html>
