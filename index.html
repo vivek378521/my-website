@@ -13,6 +13,9 @@
     <meta name="twitter:description" content="Product engineer who builds features end-to-end, from backend systems to user-facing experiences.">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='46' fill='%23073b8e' stroke='%23fff' stroke-width='3' stroke-dasharray='6 3'/><text x='50' y='58' text-anchor='middle' fill='%23fff200' font-family='Georgia' font-size='36' font-weight='900'>VK</text></svg>">
     <link rel="canonical" href="https://vivek378521.github.io">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Tiro+Devanagari+Sanskrit:ital@0;1&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script type="application/ld+json">
     {
@@ -36,21 +39,42 @@
 </head>
 
 <body>
+    <a class="skip-link" href="#portal-view">Skip to main content</a>
     <div class="page">
         <header class="site-header" id="top">
             <div class="utility-bar">
                 <span>भारत / 日本 / Backend Systems</span>
-                <span class="status-dot blink">● OPEN FOR WORK</span>
-                <span>Last updated: August 2026</span>
+                <span class="status-dot">● OPEN FOR WORK</span>
+                <span id="gov-date">As on 08 October 2026</span>
+                <span class="text-size" role="group" aria-label="Text size">
+                    <button type="button" data-text-size="down" aria-label="Decrease text size">A−</button>
+                    <button type="button" data-text-size="reset" aria-label="Reset text size">A</button>
+                    <button type="button" data-text-size="up" aria-label="Increase text size">A+</button>
+                </span>
                 <button class="simple-toggle" type="button" data-view-target="simple">Simple view</button>
             </div>
 
             <div class="masthead">
                 <div class="emblem">VK</div>
-                <div>
+                <div class="masthead-text">
+                    <span class="masthead-flag" aria-hidden="true">
+                        <svg viewBox="0 0 42 28" xmlns="http://www.w3.org/2000/svg" role="img">
+                            <rect x="0.5" y="0.5" width="41" height="27" rx="2.5" fill="#fff" stroke="#0e1420" stroke-opacity="0.35"/>
+                            <path d="M1 3.5a2.5 2.5 0 0 1 2.5-2.5H40v8H3.5A2.5 2.5 0 0 1 1 6.5z" fill="#ff9933"/>
+                            <rect x="1" y="9" width="39" height="8" fill="#ffffff"/>
+                            <path d="M1 19v5.5A2.5 2.5 0 0 0 3.5 27H40v-8z" fill="#138808"/>
+                            <circle cx="20.5" cy="13" r="3.1" fill="none" stroke="#000080" stroke-width="0.9"/>
+                            <circle cx="20.5" cy="13" r="0.7" fill="#000080"/>
+                        </svg>
+                    </span>
                     <p class="ministry-line">Personal Engineering Portal</p>
                     <h1 class="name">Vivek Khatri</h1>
-                    <p class="subtitle">Product Engineer · Backend Systems · Features · Data Pipelines · Automation</p>
+                    <p class="subtitle">Pragmatic product engineer who ships features across the stack — backend, data pipelines, and the debugging when reality disagrees.</p>
+                    <div class="cta-row">
+                        <a class="btn btn-primary" href="mailto:vvk3785@gmail.com">Contact me</a>
+                        <a class="btn btn-ghost" href="https://drive.google.com/file/d/19Wa-6nKX6SU4irh_yiMC8AuhtA-2hX3K/view?usp=sharing" target="_blank" rel="noopener">Resume</a>
+                        <a class="btn btn-ghost" href="https://tech.peculiarvivek.com/don-t-you-worry-about-integrations" target="_blank" rel="noopener">Read my writing</a>
+                    </div>
                 </div>
                 <img src="my-face.jpeg" alt="Vivek Khatri" class="portrait" loading="lazy">
             </div>
@@ -58,17 +82,33 @@
             <nav class="main-nav" aria-label="Primary navigation">
                 <a href="#profile">Profile</a>
                 <a href="#position">Why me</a>
-                <a href="#testimonials">Testimonials</a>
-                <a href="#skills">How I work</a>
+                <a href="#verses">Verses</a>
                 <a href="#projects">Projects</a>
                 <a href="#writing">Writing</a>
-                <a href="kv-cache.html">KV Cache</a>
                 <a href="#contact">Contact</a>
                 <a href="https://drive.google.com/file/d/19Wa-6nKX6SU4irh_yiMC8AuhtA-2hX3K/view?usp=sharing" target="_blank" rel="noopener">Resume</a>
             </nav>
 
-            <div class="notice-strip">
-                <span>★ NEW ESSAY: <a href="https://tech.peculiarvivek.com/don-t-you-worry-about-integrations" target="_blank" rel="noopener">Don't you worry about Integrations</a> ★ Ask what happens when it breaks ★</span>
+            <div class="ticker" aria-label="Announcements">
+                <span class="ticker-label">What's New</span>
+                <div class="ticker-track">
+                    <div class="ticker-content">
+                        <div class="ticker-group">
+                            <span>★ New essay — <a href="https://tech.peculiarvivek.com/don-t-you-worry-about-integrations" target="_blank" rel="noopener">Don't you worry about integrations</a></span>
+                            <span>★ 40 posts in the archive — <a href="https://tech.peculiarvivek.com/archive" target="_blank" rel="noopener">Read them all</a></span>
+                            <span>★ Open for work — <a href="mailto:vvk3785@gmail.com">vvk3785@gmail.com</a></span>
+                            <span>★ codex-stats on PyPI — pipx install codex-stats</span>
+                            <span>★ New: H2O KV cache, explained — <a href="https://tech.peculiarvivek.com/h2o-kv-cache-an-easy-explanation" target="_blank" rel="noopener">Read</a></span>
+                        </div>
+                        <div class="ticker-group" aria-hidden="true">
+                            <span>★ New essay — <a href="https://tech.peculiarvivek.com/don-t-you-worry-about-integrations" target="_blank" rel="noopener">Don't you worry about integrations</a></span>
+                            <span>★ 40 posts in the archive — <a href="https://tech.peculiarvivek.com/archive" target="_blank" rel="noopener">Read them all</a></span>
+                            <span>★ Open for work — <a href="mailto:vvk3785@gmail.com">vvk3785@gmail.com</a></span>
+                            <span>★ codex-stats on PyPI — pipx install codex-stats</span>
+                            <span>★ New: H2O KV cache, explained — <a href="https://tech.peculiarvivek.com/h2o-kv-cache-an-easy-explanation" target="_blank" rel="noopener">Read</a></span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </header>
 
@@ -106,58 +146,40 @@
                     <h2>Favourite Data Structure</h2>
                     <p>Queue</p>
                 </section>
-
-                <section class="box opinion-box">
-                    <h2>Small Opinion</h2>
-                    <p><strong>AI is the wrong keyword.</strong> I prefer “machine intelligence.”</p>
-                </section>
             </aside>
 
-            <section class="main-panel reveal">
-                <div class="hero-banner">
-                    <span class="corner-tag">Featured</span>
-                    <h2>Pragmatic product engineer who ships features across the stack.</h2>
-                    <p>I take an unclear problem, build the backend, wire the data path, ship it, then debug it when reality disagrees.</p>
-                </div>
-
-                <a class="blog-banner reveal" href="https://tech.peculiarvivek.com/don-t-you-worry-about-integrations" target="_blank" rel="noopener">
-                    <span class="new-badge blink">READ</span>
-                    <div>
-                        <p class="blog-label">Featured Technical Writing</p>
-                        <h2>Don’t you worry about integrations?</h2>
-                        <strong>A field checklist for third-party APIs, honest failure states, and keeping control of your system →</strong>
-                    </div>
+            <section class="main-panel">
+                <a class="feature-card reveal" href="https://tech.peculiarvivek.com/don-t-you-worry-about-integrations" target="_blank" rel="noopener">
+                    <span class="stamp" aria-hidden="true">Filed<br>Jul 2026</span>
+                    <span class="feature-kicker">Featured writing</span>
+                    <h2>Don’t you worry about integrations?</h2>
+                    <p>A field checklist for third-party APIs, honest failure states, and keeping control of your system.</p>
+                    <span class="feature-more">Read the essay →</span>
                 </a>
 
-                <section class="position-board reveal" id="position">
-                    <h2 class="section-title">Why me / मेरा जवाब</h2>
-                    <div class="position-grid">
-                        <p class="position-lede">I build backend systems that move data, survive edge cases, and stay understandable after they reach production.</p>
-                        <ul class="position-list">
-                            <li>Simple designs, observable behavior, code that holds up under pressure.</li>
-                            <li>Early-stage products — jugaad to learn fast, then solidify into something reliable.</li>
-                            <li>Drawn to systems engineering, inference, speed, and dependability.</li>
-                        </ul>
-                    </div>
+                <section class="section reveal" id="position">
+                    <p class="kicker">Why me / मेरा जवाब</p>
+                    <p class="lede">I build backend systems that move data, survive edge cases, and stay understandable after they reach production.</p>
+                    <ul class="plain-list">
+                        <li>Simple designs, observable behavior, code that holds up under pressure.</li>
+                        <li>Early-stage products — jugaad to learn fast, then solidify into something reliable.</li>
+                        <li>Drawn to systems engineering, inference, speed, and dependability.</li>
+                    </ul>
                 </section>
 
-                <section class="testimonials reveal" id="testimonials">
-                    <h2 class="section-title">Testimonials / प्रशंसापत्र</h2>
+                <section class="section reveal" id="testimonials">
+                    <p class="kicker">Testimonials / प्रशंसापत्र</p>
                     <div class="testimonial-grid">
                         <blockquote class="testimonial-card">
-                            <div class="testimonial-quote">
-                                <p>“Relentless curiosity — he treats engineering as a tool for exploration, and he is thoughtfully self-directed.”</p>
-                            </div>
-                            <footer class="testimonial-attribution">
+                            <p>“Relentless curiosity — he treats engineering as a tool for exploration, and he is thoughtfully self-directed.”</p>
+                            <footer>
                                 <span class="testimonial-author">ChatGPT</span>
                                 <span class="testimonial-org">OpenAI</span>
                             </footer>
                         </blockquote>
                         <blockquote class="testimonial-card">
-                            <div class="testimonial-quote">
-                                <p>“He treats software as a thinking tool, not just a production tool — the kind of engineer worth trusting with problems that aren't fully defined yet.”</p>
-                            </div>
-                            <footer class="testimonial-attribution">
+                            <p>“He treats software as a thinking tool, not just a production tool — the kind of engineer worth trusting with problems that aren't fully defined yet.”</p>
+                            <footer>
                                 <span class="testimonial-author">Claude</span>
                                 <span class="testimonial-org">Anthropic</span>
                             </footer>
@@ -165,8 +187,8 @@
                     </div>
                 </section>
 
-                <section class="capability-board reveal" id="skills">
-                    <h2 class="section-title">Capabilities / कौशल / 能力</h2>
+                <section class="section reveal" id="skills">
+                    <p class="kicker">How I work / कौशल</p>
                     <div class="capability-grid">
                         <article>
                             <strong>Backend Systems</strong>
@@ -187,60 +209,88 @@
                     </div>
                 </section>
 
-                <section class="projects-table reveal" id="projects">
-                    <h2 class="section-title">Selected Works Register</h2>
-                    <div class="table-wrap">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th scope="col">Project</th>
-                                    <th scope="col">Type</th>
-                                    <th scope="col">Engineering Signal</th>
-                                    <th scope="col">Link</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="highlight-row">
-                                    <td><strong>codex-stats</strong><br><code>pipx install codex-stats</code></td>
-                                    <td>Python CLI / Observability</td>
-                                    <td>Local Codex usage dashboard with breakdowns, cost estimates, exports and shareable cards.</td>
-                                    <td><a href="https://pypi.org/project/codex-stats/" target="_blank" rel="noopener">Open</a></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>G-Exporter</strong></td>
-                                    <td>Small utility</td>
-                                    <td>Exports a single Google Sheet cleanly.</td>
-                                    <td><a href="https://gsheet-exporter.peculiarvivek.com/" target="_blank" rel="noopener">Open</a></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Imagify</strong></td>
-                                    <td>Small image toy</td>
-                                    <td>Simple tool for making images with text on them.</td>
-                                    <td><a href="https://imagify.peculiarvivek.com" target="_blank" rel="noopener">Open</a></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Huff-Puff</strong></td>
-                                    <td>Python package</td>
-                                    <td>Published utility package for compression and processing tasks.</td>
-                                    <td><a href="https://pypi.org/project/huff-puff/" target="_blank" rel="noopener">Open</a></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Humans of Tpot</strong></td>
-                                    <td>Full-stack platform</td>
-                                    <td>Community storytelling product with auth, persistence and user-facing flows.</td>
-                                    <td><a href="https://www.humansoftpot.com/" target="_blank" rel="noopener">Open</a></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                <section class="section reveal" id="projects">
+                    <p class="kicker">Selected works / कार्य</p>
+                    <div class="project-grid">
+                        <article class="project-card">
+                            <span class="chip chip-live">Live · PyPI</span>
+                            <h3>codex-stats</h3>
+                            <code class="install">pipx install codex-stats</code>
+                            <p>Local Codex usage dashboard with breakdowns, cost estimates, exports and shareable cards.</p>
+                            <a class="project-link" href="https://pypi.org/project/codex-stats/" target="_blank" rel="noopener">Open →</a>
+                        </article>
+                        <article class="project-card">
+                            <span class="chip">Utility</span>
+                            <h3>G-Exporter</h3>
+                            <p>Exports a single Google Sheet cleanly, without the settings maze.</p>
+                            <a class="project-link" href="https://gsheet-exporter.peculiarvivek.com/" target="_blank" rel="noopener">Open →</a>
+                        </article>
+                        <article class="project-card">
+                            <span class="chip">Toy</span>
+                            <h3>Imagify</h3>
+                            <p>Simple tool for making images with text on them.</p>
+                            <a class="project-link" href="https://imagify.peculiarvivek.com" target="_blank" rel="noopener">Open →</a>
+                        </article>
+                        <article class="project-card">
+                            <span class="chip">Python package</span>
+                            <h3>Huff-Puff</h3>
+                            <p>Published utility package for compression and processing tasks.</p>
+                            <a class="project-link" href="https://pypi.org/project/huff-puff/" target="_blank" rel="noopener">Open →</a>
+                        </article>
+                        <article class="project-card">
+                            <span class="chip">Full-stack</span>
+                            <h3>Humans of Tpot</h3>
+                            <p>Community storytelling product with auth, persistence and user-facing flows.</p>
+                            <a class="project-link" href="https://www.humansoftpot.com/" target="_blank" rel="noopener">Open →</a>
+                        </article>
                     </div>
+                </section>
+
+                <section class="section reveal" id="writing">
+                    <p class="kicker">Writing / लेखन</p>
+                    <p class="lede">Field notes on backend systems, integrations, and whatever I broke last month.</p>
+                    <ol class="post-list">
+                        <li><a href="https://tech.peculiarvivek.com/h2o-kv-cache-an-easy-explanation" target="_blank" rel="noopener">
+                            <span class="post-date">27 Aug 2026</span>
+                            <span class="post-title">H2O KV Cache — An Easy Explanation</span>
+                            <span class="post-meta">5 min</span>
+                        </a></li>
+                        <li><a href="https://tech.peculiarvivek.com/journey-into-tech" target="_blank" rel="noopener">
+                            <span class="post-date">22 Aug 2026</span>
+                            <span class="post-title">Journey into Tech</span>
+                            <span class="post-meta">5 min</span>
+                        </a></li>
+                        <li><a href="https://tech.peculiarvivek.com/don-t-you-worry-about-integrations" target="_blank" rel="noopener">
+                            <span class="post-date">11 Jul 2026</span>
+                            <span class="post-title">Don't you worry about Integrations</span>
+                            <span class="post-meta">5 min</span>
+                        </a></li>
+                        <li><a href="https://tech.peculiarvivek.com/do-you-understand-your-code" target="_blank" rel="noopener">
+                            <span class="post-date">28 Jun 2026</span>
+                            <span class="post-title">Do you understand your Code?</span>
+                            <span class="post-meta">7 min</span>
+                        </a></li>
+                        <li><a href="https://tech.peculiarvivek.com/what-i-did-in-april" target="_blank" rel="noopener">
+                            <span class="post-date">03 May 2026</span>
+                            <span class="post-title">What I did in April</span>
+                            <span class="post-meta">7 min</span>
+                        </a></li>
+                    </ol>
+                    <a class="archive-link" href="https://tech.peculiarvivek.com/archive" target="_blank" rel="noopener">Browse the full archive — 40 posts →</a>
+                    <a class="archive-link archive-link--rss" href="https://tech.peculiarvivek.com/rss.xml" target="_blank" rel="noopener">RSS</a>
                 </section>
             </section>
 
             <aside class="right-rail reveal">
-                <section class="box stamp-box">
-                    <h2>Official Seal</h2>
-                    <div class="seal">कर्म</div>
-                    <p>Bias toward execution. Simplicity. Debuggability.</p>
+                <section class="box disco-box">
+                    <h2>Dance Floor</h2>
+                    <div class="disco-scene" aria-hidden="true">
+                        <span class="disco-cord"></span>
+                        <span class="disco-mount"></span>
+                        <span class="disco-ball"></span>
+                        <span class="disco-glint"></span>
+                        <span class="disco-beam"></span>
+                    </div>
                 </section>
 
                 <section class="box">
@@ -256,23 +306,58 @@
                     </div>
                 </section>
 
-                <section class="box" id="writing">
-                    <h2>Latest Writing</h2>
-                    <div class="writing-list">
-                        <a class="article-card" href="https://tech.peculiarvivek.com/don-t-you-worry-about-integrations" target="_blank" rel="noopener">
-                            <span>Field notes · July 2026</span>
-                            <strong>Don’t you worry about integrations?</strong>
-                            <em>Read the checklist →</em>
-                        </a>
-                        <a class="article-card article-card--blue" href="https://tech.peculiarvivek.com/do-you-understand-your-code" target="_blank" rel="noopener">
-                            <span>Field notes · June 2026</span>
-                            <strong>Do you understand your code?</strong>
-                            <em>Read the argument →</em>
-                        </a>
-                    </div>
-                </section>
             </aside>
         </main>
+
+        <section class="verse-band reveal" id="verses" aria-label="Verses I keep">
+            <div class="verse-band-inner">
+                <div class="band-rule" aria-hidden="true"><span>◆</span></div>
+
+                <p class="band-kicker">श्लोक · The verses I keep</p>
+
+                <div class="band-grid">
+                    <figure class="verse">
+                        <p class="verse-label">कर्म — the work</p>
+                        <blockquote class="verse-text">
+                            कर्मण्येवाधिकारस्ते मा फलेषु कदाचन।<br>
+                            मा कर्मफलहेतुर्भूर्मा ते सङ्गोऽस्त्वकर्मणि॥
+                        </blockquote>
+                        <figcaption class="verse-meaning">
+                            You have a right to the work alone, never to its fruits. Let not the fruits be your motive, and let your attachment never be to inaction.
+                        </figcaption>
+                        <span class="verse-ref">Bhagavad Gita · 2.47</span>
+                    </figure>
+
+                    <figure class="verse">
+                        <p class="verse-label">धर्म — the promise</p>
+                        <blockquote class="verse-text">
+                            यदा यदा हि धर्मस्य ग्लानिर्भवति भारत।<br>
+                            अभ्युत्थानमधर्मस्य तदात्मानं सृजाम्यहम्॥<br><br>
+                            परित्राणाय साधूनां विनाशाय च दुष्कृताम्।<br>
+                            धर्मसंस्थापनार्थाय सम्भवामि युगे युगे॥
+                        </blockquote>
+                        <figcaption class="verse-meaning">
+                            Whenever righteousness fades and unrighteousness rises, I manifest myself — for the protection of the good, the destruction of the wicked, and the establishment of dharma, age after age.
+                        </figcaption>
+                        <span class="verse-ref">Bhagavad Gita · 4.7–4.8</span>
+                    </figure>
+
+                    <figure class="verse">
+                        <p class="verse-label">आत्मा — the soul</p>
+                        <blockquote class="verse-text">
+                            नैनं छिन्दन्ति शस्त्राणि नैनं दहति पावकः।<br>
+                            न चैनं क्लेदयन्त्यापो न शोषयति मारुत॥
+                        </blockquote>
+                        <figcaption class="verse-meaning">
+                            Weapons cannot cut it, fire cannot burn it, water cannot wet it, nor the wind dry it. The soul is indestructible, permanent, and immortal. Therefore, O Arjuna, fight!
+                        </figcaption>
+                        <span class="verse-ref">Bhagavad Gita · 2.18</span>
+                    </figure>
+                </div>
+
+                <div class="band-rule" aria-hidden="true"><span>◆</span></div>
+            </div>
+        </section>
 
         <section class="simple-view view-panel" id="simple-view" aria-label="Simple website view">
             <div class="simple-card">
@@ -281,6 +366,7 @@
                 <h2>Product engineer who ships features end-to-end.</h2>
                 <p>APIs, data pipelines, automation, and production debugging.</p>
                 <div class="simple-links">
+                    <a class="btn btn-primary" href="mailto:vvk3785@gmail.com">Contact me</a>
                     <a href="https://pypi.org/project/codex-stats/" target="_blank" rel="noopener">codex-stats</a>
                     <a href="https://tech.peculiarvivek.com/don-t-you-worry-about-integrations" target="_blank" rel="noopener">Integration checklist</a>
                     <a href="https://tech.peculiarvivek.com/do-you-understand-your-code" target="_blank" rel="noopener">Do you understand your code?</a>
@@ -302,6 +388,18 @@
                 <a href="https://linkedin.com/in/vivekkhatri007" target="_blank" rel="noopener">LinkedIn</a>
                 <a href="mailto:vvk3785@gmail.com">Email</a>
             </nav>
+
+            <div class="footer-sign">
+                <svg viewBox="0 0 42 28" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <rect x="0.5" y="0.5" width="41" height="27" rx="2.5" fill="#fff" stroke="#0e1420" stroke-opacity="0.35"/>
+                    <path d="M1 3.5a2.5 2.5 0 0 1 2.5-2.5H40v8H3.5A2.5 2.5 0 0 1 1 6.5z" fill="#ff9933"/>
+                    <rect x="1" y="9" width="39" height="8" fill="#ffffff"/>
+                    <path d="M1 19v5.5A2.5 2.5 0 0 0 3.5 27H40v-8z" fill="#138808"/>
+                    <circle cx="20.5" cy="13" r="3.1" fill="none" stroke="#000080" stroke-width="0.9"/>
+                    <circle cx="20.5" cy="13" r="0.7" fill="#000080"/>
+                </svg>
+                <span>© 2026 Vivek Khatri · Republic of Bharat</span>
+            </div>
         </footer>
     </div>
 

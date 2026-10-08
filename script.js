@@ -54,6 +54,41 @@ viewToggleButtons.forEach(button => {
 
 setView(window.location.hash === '#simple' ? 'simple' : 'portal');
 
+// Live "As on" stamp, gazette style
+const dateEl = document.getElementById('gov-date');
+if (dateEl) {
+    const now = new Date();
+    const day = now.toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
+    const time = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+    dateEl.textContent = `As on ${day} · ${time} IST`;
+}
+
+// Text size controls (the govt accessibility panel, mini edition)
+const textSizeLevels = [1, 1.15, 1.3];
+let textSizeIndex = 0;
+
+try {
+    const saved = parseInt(localStorage.getItem('vk-text-size') || '0', 10);
+    if (!isNaN(saved) && saved >= 0 && saved < textSizeLevels.length) textSizeIndex = saved;
+} catch (e) { /* private mode */ }
+
+function applyTextSize() {
+    document.body.style.zoom = textSizeLevels[textSizeIndex];
+    try { localStorage.setItem('vk-text-size', textSizeIndex); } catch (e) { /* ignore */ }
+}
+
+document.querySelectorAll('[data-text-size]').forEach(button => {
+    button.addEventListener('click', () => {
+        const action = button.dataset.textSize;
+        if (action === 'up') textSizeIndex = Math.min(textSizeIndex + 1, textSizeLevels.length - 1);
+        if (action === 'down') textSizeIndex = Math.max(textSizeIndex - 1, 0);
+        if (action === 'reset') textSizeIndex = 0;
+        applyTextSize();
+    });
+});
+
+applyTextSize();
+
 // Console greeting
 console.log('%cVivek Khatri / backend + data systems', 'font-size: 16px; color: #0044cc; font-weight: bold;');
 console.log('%cThanks for checking out the source.', 'font-size: 12px; color: #888;');
