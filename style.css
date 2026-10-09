@@ -14,9 +14,9 @@
     --line: rgba(214, 180, 140, 0.18);
     --border: #5a3a22;
     --shadow: 3px 3px 0 rgba(0, 0, 0, 0.35);
-    --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-    --font-display: 'Tiro Devanagari Sanskrit', Georgia, 'Times New Roman', serif;
-    --font-text: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+    --font-body: 'IBM Plex Sans', 'IBM Plex Sans Devanagari', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    --font-display: 'Instrument Serif', 'Tiro Devanagari Sanskrit', Georgia, 'Times New Roman', serif;
+    --font-text: 'Newsreader', Georgia, 'Times New Roman', serif;
     --pix-soft:
         conic-gradient(rgba(255, 255, 255, 0.045) 0 25%, transparent 25% 50%, rgba(255, 255, 255, 0.045) 50% 75%, transparent 75% 100%) 0 0 / 28px 28px,
         conic-gradient(rgba(255, 255, 255, 0.03) 0 25%, transparent 25% 50%, rgba(255, 255, 255, 0.03) 50% 75%, transparent 75% 100%) 0 0 / 14px 14px;
