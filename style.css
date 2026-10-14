@@ -229,6 +229,8 @@ body.simple-mode .page {
 /* ─── Masthead ─── */
 
 .masthead {
+    position: relative;
+    overflow: hidden;
     display: grid;
     grid-template-columns: 92px minmax(0, 1fr) 148px;
     gap: 24px;
@@ -236,6 +238,41 @@ body.simple-mode .page {
     padding: clamp(28px, 4vw, 48px) 24px;
     background: var(--cream);
     border-bottom: 1px solid rgba(232, 148, 74, 0.35);
+}
+
+/* ─── JS-drawn hero scene (pixel man gazing at the planets) ─── */
+
+.masthead-canvas {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+.masthead::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: radial-gradient(
+        92% 120% at 50% 44%,
+        rgba(14, 9, 4, 0.72) 0%,
+        rgba(14, 9, 4, 0.44) 40%,
+        rgba(14, 9, 4, 0.08) 72%,
+        rgba(14, 9, 4, 0.28) 100%
+    );
+}
+
+.masthead > .emblem,
+.masthead > .masthead-text,
+.masthead > .portrait {
+    position: relative;
+    z-index: 2;
 }
 
 .masthead-text {
@@ -559,6 +596,28 @@ body.simple-mode .footer {
 
 .box > h2 + p {
     margin-top: 14px;
+}
+
+.box .oneko-stage {
+    position: relative;
+    display: block;
+    width: calc(100% - 28px);
+    max-width: 240px;
+    height: 176px;
+    margin: 14px auto;
+    border: 1px solid var(--border);
+    background: radial-gradient(circle at 50% 78%, #2c1c10, #150d07 72%);
+    overflow: hidden;
+    touch-action: none;
+    cursor: crosshair;
+}
+
+.box .cat-hint {
+    margin: 0 14px 14px;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.45;
+    text-align: center;
 }
 
 .box p {
@@ -1492,128 +1551,6 @@ body.simple-mode .verse-band {
     line-height: 1.6;
 }
 
-/* ─── Disco ball ─── */
-
-.disco-scene {
-    position: relative;
-    height: 230px;
-    overflow: hidden;
-}
-
-.disco-cord {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    width: 2px;
-    height: 40px;
-    background: linear-gradient(#3a4352, #566070);
-    transform: translateX(-50%);
-}
-
-.disco-mount {
-    position: absolute;
-    top: 39px;
-    left: 50%;
-    width: 10px;
-    height: 6px;
-    border-radius: 3px;
-    background: #6a7587;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-    transform: translateX(-50%);
-}
-
-.disco-ball {
-    position: absolute;
-    top: 43px;
-    left: 50%;
-    width: 54px;
-    height: 54px;
-    margin-left: -27px;
-    border-radius: 50%;
-    background:
-        radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.95), transparent 28%),
-        conic-gradient(from 0deg,
-            #cfd6df 0 30deg, #939eac 30deg 60deg, #ffffff 60deg 90deg,
-            #aab4c1 90deg 120deg, #7f8b99 120deg 150deg, #eef1f5 150deg 180deg,
-            #9aa5b2 180deg 210deg, #ffffff 210deg 240deg, #8793a0 240deg 270deg,
-            #dbe1e8 270deg 300deg, #b0bac6 300deg 330deg, #f4f6f9 330deg 360deg);
-    box-shadow:
-        0 0 0 2px rgba(20, 30, 45, 0.25),
-        0 0 24px rgba(255, 255, 255, 0.14),
-        0 0 38px rgba(255, 92, 220, 0.22),
-        0 0 50px rgba(64, 224, 250, 0.2);
-    animation: disco-spin 5.5s linear infinite;
-}
-
-@keyframes disco-spin {
-    to { transform: rotate(360deg); }
-}
-
-.disco-glint {
-    position: absolute;
-    top: 43px;
-    left: 50%;
-    width: 54px;
-    height: 54px;
-    margin-left: -27px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 34% 30%, #fff, rgba(255, 255, 255, 0.25) 24%, transparent 42%);
-    animation: disco-glint 2.6s ease-in-out infinite;
-}
-
-@keyframes disco-glint {
-    0%, 100% { opacity: 0.35; }
-    50%      { opacity: 0.95; }
-}
-
-.disco-beam {
-    position: absolute;
-    top: 97px;
-    left: 50%;
-    width: 180px;
-    height: 150px;
-    margin-left: -90px;
-    background: linear-gradient(to bottom, rgba(255, 209, 102, 0.42), rgba(255, 209, 102, 0.06) 70%, transparent);
-    clip-path: polygon(50% 0, 0 100%, 100% 100%);
-    animation: disco-flicker 4.2s ease-in-out infinite;
-}
-
-.disco-scene::before,
-.disco-scene::after {
-    content: "";
-    position: absolute;
-    top: 97px;
-    left: 50%;
-    width: 165px;
-    height: 165px;
-    margin-left: -82px;
-    pointer-events: none;
-    transform-origin: top center;
-}
-
-.disco-scene::before {
-    background: linear-gradient(to bottom, rgba(255, 92, 220, 0.38), rgba(255, 92, 220, 0.05) 70%, transparent);
-    clip-path: polygon(30% 0, 0 100%, 100% 100%);
-    animation: disco-sweep 7s ease-in-out infinite alternate, disco-flicker 3.9s ease-in-out infinite;
-}
-
-.disco-scene::after {
-    background: linear-gradient(to bottom, rgba(64, 224, 250, 0.34), rgba(64, 224, 250, 0.05) 70%, transparent);
-    clip-path: polygon(70% 0, 0 100%, 100% 100%);
-    animation: disco-sweep 10s ease-in-out infinite alternate-reverse, disco-flicker 4.7s ease-in-out infinite;
-}
-
-@keyframes disco-sweep {
-    from { transform: rotate(-16deg); }
-    to   { transform: rotate(16deg); }
-}
-
-@keyframes disco-flicker {
-    0%, 100% { opacity: 0.5; }
-    45%      { opacity: 0.32; }
-    72%      { opacity: 0.62; }
-}
-
 /* ─── Responsive ─── */
 
 @media (max-width: 1100px) {
@@ -1736,12 +1673,6 @@ body.simple-mode .verse-band {
 
     .simple-card h2 {
         font-size: clamp(2.4rem, 13vw, 4rem);
-    }
-}
-
-@media (max-width: 720px) {
-    .disco {
-        display: none;
     }
 }
 
