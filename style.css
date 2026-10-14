@@ -15,8 +15,8 @@
     --border: #5a3a22;
     --shadow: 3px 3px 0 rgba(0, 0, 0, 0.35);
     --font-body: 'IBM Plex Sans', 'IBM Plex Sans Devanagari', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-    --font-display: 'Instrument Serif', 'Tiro Devanagari Sanskrit', Georgia, 'Times New Roman', serif;
-    --font-text: 'Newsreader', Georgia, 'Times New Roman', serif;
+    --font-display: 'IBM Plex Sans', 'IBM Plex Sans Devanagari', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    --font-text: 'IBM Plex Sans', 'IBM Plex Sans Devanagari', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
     --pix-soft:
         conic-gradient(rgba(255, 255, 255, 0.045) 0 25%, transparent 25% 50%, rgba(255, 255, 255, 0.045) 50% 75%, transparent 75% 100%) 0 0 / 28px 28px,
         conic-gradient(rgba(255, 255, 255, 0.03) 0 25%, transparent 25% 50%, rgba(255, 255, 255, 0.03) 50% 75%, transparent 75% 100%) 0 0 / 14px 14px;
@@ -1390,6 +1390,106 @@ body.simple-mode .verse-band {
     margin-left: 18px;
     color: var(--muted);
     border-bottom-color: var(--line);
+}
+
+/* ─── Subpage (anime shelf and friends) ─── */
+
+.subpage {
+    display: grid;
+    gap: clamp(16px, 2vw, 26px);
+    width: min(900px, calc(100% - clamp(20px, 4vw, 56px)));
+    margin: 0 auto;
+    padding: clamp(16px, 2vw, 32px) 0;
+}
+
+.masthead--compact {
+    padding-block: clamp(22px, 3vw, 34px);
+}
+
+/* ─── Anime list ─── */
+
+.anime-list {
+    display: grid;
+    gap: 12px;
+    margin-top: 22px;
+}
+
+.anime-item {
+    padding: 16px 18px;
+    background: #3f2a18;
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--gold);
+}
+
+.anime-item-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px 14px;
+}
+
+.anime-item h3 {
+    color: var(--heading);
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 400;
+    line-height: 1.15;
+}
+
+.anime-status {
+    flex: 0 0 auto;
+    padding: 3px 10px;
+    border: 1px solid var(--border);
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.anime-status--watched {
+    color: #fff;
+    background: var(--green);
+    border-color: var(--green);
+}
+
+.anime-status--watching {
+    color: #1a1205;
+    background: var(--gold);
+    border-color: var(--gold);
+}
+
+.anime-status--dropped {
+    color: #fff;
+    background: var(--red);
+    border-color: var(--red);
+}
+
+.anime-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+}
+
+.anime-tags .tag {
+    padding: 3px 10px;
+    color: #f5e2cc;
+    background: #3a2412;
+    border: 1px solid var(--line);
+    font-family: var(--font-body);
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+.anime-item p {
+    margin-top: 12px;
+    color: #d4b598;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.6;
 }
 
 /* ─── Disco ball ─── */

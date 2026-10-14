@@ -21,7 +21,7 @@ if ('IntersectionObserver' in window) {
             entry.target.classList.add('visible');
             observer.unobserve(entry.target);
         });
-    }, { threshold: 0.18 });
+    }, { threshold: 0, rootMargin: '0px 0px -10% 0px' });
 
     revealItems.forEach(item => revealObserver.observe(item));
 } else {
@@ -34,6 +34,8 @@ const portalView = document.querySelector('#portal-view');
 const simpleView = document.querySelector('#simple-view');
 
 function setView(viewName) {
+    if (!portalView || !simpleView) return;
+
     const nextIsSimple = viewName === 'simple';
 
     simpleView.classList.toggle('active', nextIsSimple);
@@ -52,7 +54,9 @@ viewToggleButtons.forEach(button => {
     });
 });
 
-setView(window.location.hash === '#simple' ? 'simple' : 'portal');
+if (portalView && simpleView) {
+    setView(window.location.hash === '#simple' ? 'simple' : 'portal');
+}
 
 // Live "As on" stamp, gazette style
 const dateEl = document.getElementById('gov-date');
